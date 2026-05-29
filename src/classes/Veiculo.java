@@ -15,6 +15,7 @@ public class Veiculo{
         int velocidade,
         String placa,
         int prioridade){
+            
         this.id=id;
         this.tipo=tipo;
         this.direcao=direcao;
@@ -22,5 +23,4 @@ public class Veiculo{
         this.placa=placa;
         this.prioridade=prioridade;
         }
-)
 }
