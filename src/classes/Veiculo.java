@@ -1,6 +1,6 @@
 package classes;
 
-public class Veiculo{
+public abstract class Veiculo{
     private int id;
     private String tipo;
     private String direcao;
