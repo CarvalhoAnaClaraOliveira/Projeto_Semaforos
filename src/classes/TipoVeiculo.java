@@ -9,7 +9,7 @@ public class TipoVeiculo extends Veiculo{ //tipoVeiculo extende veiculo
         String direcao,
         int velocidade,
         String placa,
-        int prioridade,
+        Prioridade prioridade,
         String modelo
     ){
             

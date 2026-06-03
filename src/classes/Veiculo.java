@@ -4,9 +4,9 @@ public abstract class Veiculo{
     private int id;
     private String tipo;
     private String direcao;
-    private int velocidade;
+    private final int velocidade;
     private String placa;
-    private int prioridade;
+    private Prioridade prioridade;
 
     public Veiculo ( 
         int id,
@@ -14,7 +14,7 @@ public abstract class Veiculo{
         String direcao,
         int velocidade,
         String placa,
-        int prioridade){
+        Prioridade prioridade){
             
         this.id=id;
         this.tipo=tipo;
@@ -27,7 +27,11 @@ public abstract void acelerar(); //metodo abstrato para acelerar o veiculo,
 public abstract void freiar(); //metodo abstrato para freiar o veiculo
 
 public int getVelocidade(){
-    return this.velocidade;
+    return velocidade;
 }
 
+public Prioridade getPrioridade() {
+    return prioridade;
+}
+public void setPrioridade(Prioridade prioridade) {this.prioridade = prioridade;}
 }
