@@ -19,8 +19,15 @@ public abstract class Veiculo{
         this.id=id;
         this.tipo=tipo;
         this.direcao=direcao;
-        this.velocidade=velocidade;
+        this.velocidade=velocidade; 
         this.placa=placa;
         this.prioridade=prioridade;
         }
+public abstract void acelerar(); //metodo abstrato para acelerar o veiculo, 
+public abstract void freiar(); //metodo abstrato para freiar o veiculo
+
+public int getVelocidade(){
+    return this.velocidade;
+}
+
 }
