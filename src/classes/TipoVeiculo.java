@@ -31,10 +31,6 @@ class Veiculo {
 }
  */
 package classes;
-
-import java.util.Random;
-
-// Removido o 'abstract' de classes que você precisa instanciar (como Carro, Moto, etc.)
 public class TipoVeiculo extends Veiculo { 
     private String modelo;
 
@@ -65,23 +61,6 @@ public class TipoVeiculo extends Veiculo {
     public String getModelo() { return modelo; }
     public void setModelo(String modelo) { this.modelo = modelo; }
 }
-
-// Classe do utilitário isolada corretamente (fora da classe TipoVeiculo)
-class GeradorPlaca {
-    private static final String LETRAS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final Random RANDOM = new Random();
-
-    public static String gerarPlacaMercosul() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 3; i++) sb.append(LETRAS.charAt(RANDOM.nextInt(LETRAS.length())));
-        sb.append(RANDOM.nextInt(10));
-        sb.append(LETRAS.charAt(RANDOM.nextInt(LETRAS.length())));
-        sb.append(RANDOM.nextInt(10));
-        sb.append(RANDOM.nextInt(10));
-        return sb.toString();
-    }
-}
-
 // Subclasse Ambulancia corrigida (Caso queira usar a placa aleatória, use GeradorPlaca.gerarPlacaMercosul())
 class Ambulancia extends Veiculo {
     private String tipoAtendimento; 
