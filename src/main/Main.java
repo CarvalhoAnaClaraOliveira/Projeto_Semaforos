@@ -1,5 +1,5 @@
 package main;
-import classes.*;
+import classes.Cruzamento;
 
 public class Main {
 

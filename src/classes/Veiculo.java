@@ -23,8 +23,12 @@ public abstract class Veiculo{
         this.placa=placa;
         this.prioridade=prioridade;
         }
-public abstract void acelerar(); //metodo abstrato para acelerar o veiculo, 
-public abstract void freiar(); //metodo abstrato para freiar o veiculo
+public void acelerar(){
+        System.out.println(" O veículo " + tipo + " está acelerando a " + velocidade + " km/h.");
+} //metodo para acelerar o veiculo, 
+public void freiar(){ //metodo para freiar o veiculo
+        System.out.println(" O veículo " + tipo + " está freiando. Velocidade: " + velocidade + " km/h");
+}
 
 public int getVelocidade(){
     return velocidade;
