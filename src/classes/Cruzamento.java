@@ -1,44 +1,63 @@
 package classes;
 
 public class Cruzamento {
-    private int ordem;
-    private String rua1;
-    private String rua2;
-    private Semaforo semaforo1;
-    private Semaforo semaforo2;
+
+    private int numero;
+    private Rua ruaHorizontal;
+    private Rua ruaVertical;
+    private Semaforo semaforoHorizontal;
+    private Semaforo semaforoVertical;
 
     public Cruzamento(
-            int ordem,
-            String rua1,
-            String rua2
-    ) {
+            int numero,
+            Rua ruaHorizontal,
+            Rua ruaVertical) {
 
-        this.ordem = ordem;
-        this.rua1 = rua1;
-        this.rua2 = rua2;
-        semaforo1 = new Semaforo(rua1, 10);
-        semaforo2 = new Semaforo(rua2, 10);
+        this.numero = numero;
+        this.ruaHorizontal = ruaHorizontal;
+        this.ruaVertical = ruaVertical;
 
     }
 
-    public void iniciarCruzamento() {
-        System.out.println(
-                "Cruzamento iniciado."
-        );
-        semaforo1.abrir();
-        semaforo2.fechar();
+    public int getNumero() {
+        return numero;
     }
 
-    public void trocarSemaforos() {
-        semaforo1.fechar();
-        semaforo2.abrir();
+    public Rua getRuaHorizontal() {
+        return ruaHorizontal;
+    }
 
+    public Rua getRuaVertical() {
+        return ruaVertical;
+    }
+
+    public Semaforo getSemaforoHorizontal() {
+        return semaforoHorizontal;
+    }
+
+    public void setSemaforoHorizontal(Semaforo semaforoHorizontal) {
+        this.semaforoHorizontal = semaforoHorizontal;
+    }
+
+    public Semaforo getSemaforoVertical() {
+        return semaforoVertical;
+    }
+
+    public void setSemaforoVertical(Semaforo semaforoVertical) {
+        this.semaforoVertical = semaforoVertical;
     }
 
     public void mostrarInformacoes() {
-        System.out.println("Ordem: " + ordem);
-        semaforo1.mostrarInformacoes();
-        semaforo2.mostrarInformacoes();
+
+        System.out.println("Cruzamento: " + numero);
+
+        System.out.println(
+                "Rua Horizontal: "
+                        + ruaHorizontal.getNome());
+
+        System.out.println(
+                "Rua Vertical: "
+                        + ruaVertical.getNome());
 
     }
 

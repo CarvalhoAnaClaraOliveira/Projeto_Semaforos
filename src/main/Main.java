@@ -1,14 +1,13 @@
 package main;
+
 import classes.*;
 
 public class Main {
 
     public static void main(String[] args) {
         Cruzamento cruzamento = new Cruzamento(
-                1,
                 "Avenida Central",
-                "Rua B"
-        );
+                "Rua B");
 
         cruzamento.iniciarCruzamento();
         System.out.println();
