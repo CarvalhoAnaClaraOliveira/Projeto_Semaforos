@@ -1,16 +1,15 @@
 package classes;
 
-public class Carro extends TipoVeiculo {
+public class Carro extends Veiculo {
+    private int andando = 30;
+    private int parado =0;
+
     public Carro(
         int id,
-        String tipo, 
         String direcao,
-        int velocidade,
-        String placa,
-        Prioridade prioridade,
-        String modelo
+        Prioridade prioridade
     ) {
-        super(id, tipo, direcao, velocidade, placa, prioridade, modelo);
+        super(id, direcao, prioridade);
+        this.setVelocidade(andando);
     }
-    
 }

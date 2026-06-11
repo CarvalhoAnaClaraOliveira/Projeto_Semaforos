@@ -4,11 +4,13 @@ public class Pedestre{
     private int id;
     private String direcao;
     private int velocidade;
+    int parado =0;
+    int andando = 5;
 
-    public Pedestre(int id, String direcao, int velocidade){
+    public Pedestre(int id, String direcao){
         this.id = id;
         this.direcao = direcao;
-        this.velocidade = velocidade;
+        this.velocidade = andando;
     }
 
     public int getId() {

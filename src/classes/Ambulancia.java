@@ -1,16 +1,16 @@
 package classes;
 
-public class Ambulancia extends TipoVeiculo {
+public class Ambulancia extends Veiculo {
+    private int andando = 60;
+    private int parado = 0;
+    
     public Ambulancia(
         int id,
-        String tipo, 
         String direcao,
-        int velocidade,
-        String placa,
-        Prioridade prioridade,
-        String modelo
+        Prioridade prioridade
     ) {
-        super(id, tipo, direcao, velocidade, placa, prioridade, modelo);
+        super(id, direcao, prioridade);
+        this.setVelocidade(andando);
     }
     
 }

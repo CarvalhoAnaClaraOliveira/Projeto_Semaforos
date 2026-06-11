@@ -1,16 +1,16 @@
 package classes;
 
-public class Onibus extends TipoVeiculo {
+public class Onibus extends Veiculo {
+    private int andando = 60;
+    private int parado =0;
+
     public Onibus(
         int id,
-        String tipo, 
         String direcao,
-        int velocidade,
-        String placa,
-        Prioridade prioridade,
-        String modelo
+        Prioridade prioridade
     ) {
-        super(id, tipo, direcao, velocidade, placa, prioridade, modelo);
+        super(id, direcao, prioridade);
+        this.setVelocidade(andando);
     }
 
 }
