@@ -1,36 +1,64 @@
 package classes;
 
 public class Semaforo {
-    private String rua;
+
+    private Rua rua;
     private int status;
     private int tempoAberto;
 
-    public Semaforo(String rua, int tempoAberto) {
+    public Semaforo(
+            Rua rua,
+            int tempoAberto
+    ) {
+
         this.rua = rua;
         this.tempoAberto = tempoAberto;
-        status = 0;
+        this.status = 0;
+
+    }
+    public int getStatus() {
+        return status;
     }
 
+    public int getTempoAberto() {
+        return tempoAberto;
+    }
+
+    public Rua getRua() {
+        return rua;
+    }   
+
     public void abrir() {
+
         status = 1;
+
         System.out.println(
                 "Semáforo da rua "
-                + rua
+                + rua.getNome()
                 + " ABERTO"
         );
+
     }
 
     public void fechar() {
+
         status = 0;
+
         System.out.println(
                 "Semáforo da rua "
-                + rua
+                + rua.getNome()
                 + " FECHADO"
         );
+
     }
 
     public void mostrarInformacoes() {
-        System.out.println("Rua: " + rua);
+
+        System.out.println(
+                "Rua: "
+                + rua.getNome()
+        );
+
         if (status == 1) {
             System.out.println("Status: ABERTO");
         } else {
@@ -41,5 +69,7 @@ public class Semaforo {
                 "Tempo aberto: "
                 + tempoAberto
         );
+
     }
+
 }

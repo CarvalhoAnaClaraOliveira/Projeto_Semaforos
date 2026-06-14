@@ -9,15 +9,30 @@ public class Cruzamento {
     private Semaforo semaforoVertical;
 
     public Cruzamento(
-            int numero,
-            Rua ruaHorizontal,
-            Rua ruaVertical) {
+        int numero,
+        Rua ruaHorizontal,
+        Rua ruaVertical) {
 
-        this.numero = numero;
-        this.ruaHorizontal = ruaHorizontal;
-        this.ruaVertical = ruaVertical;
+    this.numero = numero;
+    this.ruaHorizontal = ruaHorizontal;
+    this.ruaVertical = ruaVertical;
 
-    }
+    this.semaforoHorizontal =
+            new Semaforo(
+                    ruaHorizontal,
+                    10
+            );
+
+    this.semaforoVertical =
+            new Semaforo(
+                    ruaVertical,
+                    10
+            );
+
+    ruaHorizontal.adicionarCruzamento(this);
+    ruaVertical.adicionarCruzamento(this);
+
+}
 
     public int getNumero() {
         return numero;

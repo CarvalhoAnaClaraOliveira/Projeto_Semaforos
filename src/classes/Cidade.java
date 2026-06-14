@@ -14,7 +14,6 @@ public class Cidade {
 
         criarRuas();
         criarCruzamentos();
-
     }
 
     private void criarRuas() {
@@ -23,7 +22,7 @@ public class Cidade {
                 new Rua(
                         "H1",
                         "HORIZONTAL",
-                        "DIREITA"
+                        "ESQUERDA"
                 )
         );
 
@@ -31,7 +30,7 @@ public class Cidade {
                 new Rua(
                         "H2",
                         "HORIZONTAL",
-                        "ESQUERDA"
+                        "DIREITA"
                 )
         );
 
@@ -39,7 +38,7 @@ public class Cidade {
                 new Rua(
                         "H3",
                         "HORIZONTAL",
-                        "DIREITA"
+                        "ESQUERDA"
                 )
         );
 
@@ -47,7 +46,7 @@ public class Cidade {
                 new Rua(
                         "H4",
                         "HORIZONTAL",
-                        "ESQUERDA"
+                        "DIREITA"
                 )
         );
 

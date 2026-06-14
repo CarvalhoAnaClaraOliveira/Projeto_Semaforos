@@ -7,8 +7,10 @@ public class Rua {
     private String nome;
     private String orientacao;
     private String sentido;
+
     private ArrayList<Veiculo> veiculos;
     private ArrayList<Cruzamento> cruzamentos;
+
     private Sensor sensor;
 
     public Rua(
@@ -23,8 +25,7 @@ public class Rua {
         this.veiculos = new ArrayList<>();
         this.cruzamentos = new ArrayList<>();
 
-        this.sensor = null;
-
+        this.sensor = new Sensor(this);
     }
 
     public void adicionarVeiculo(Veiculo veiculo) {
@@ -67,7 +68,7 @@ public class Rua {
         return cruzamentos;
     }
 
-    public void mostrarInformacoes() {
+    public void mostrarInformacoesRua() {
 
         System.out.println("Rua: " + nome);
 
