@@ -2,11 +2,14 @@ package classes;
 
 public abstract class Veiculo {
 
+    ////VER SE VAI MANTER PRIORIDADE ASSIM OU SE JA ADICIONA DIRETO CONFORME O TIPO DE VEICULO
+
     private int id;
     private String direcao;
-    private int velocidade;
+    private int velocidadeA;
     private boolean sireneLigada;
     private Prioridade prioridade;
+    private int velocidadeC;
 
     public Veiculo ( 
         int id,
@@ -18,6 +21,7 @@ public abstract class Veiculo {
         this.prioridade=prioridade;
         }
 
+    /////////////// SIRENE /////////////////
     public void ligarSirene() {
         sireneLigada = true;
     }
@@ -30,13 +34,7 @@ public abstract class Veiculo {
         return sireneLigada;
     }
 
-    public int getVelocidade() {
-        return velocidade;
-    }
-    public void setVelocidade(int velocidade){
-        this.velocidade = velocidade;
-    }
-
+    ///////////////// PRIORIDADE  ///////////////////////
     public Prioridade getPrioridade() {
         return prioridade;
     }
@@ -45,6 +43,23 @@ public abstract class Veiculo {
             Prioridade prioridade
     ) {
         this.prioridade = prioridade;
+    }
+
+    //////////// VELOCIDADE  ////////////
+    public void pararVeiculo(){
+        this.velocidadeA =0;
+    }
+    public void setVelocidadeA(){
+        this.velocidadeA = this.velocidadeC;
+    }
+    public void setVelocidadeC(int vel){
+        this.velocidadeC = vel;
+    }
+    public int getVelocidadeC(){
+        return velocidadeC;
+    }
+    public int getVelocidadeA(){
+        return velocidadeA;
     }
 
 }

@@ -1,20 +1,18 @@
 package main;
-<<<<<<< HEAD
-
-=======
-import java.util.ArrayList;
-import java.util.List;
-
-import classes.Cruzamento;
+import classes.Ambulancia;
 import classes.Prioridade;
 import classes.Veiculo;
->>>>>>> cd3c722bc543da0edf886e085279b865732cff77
-import classes.*;
 
 public class Main {
 
     public static void main(String[] args) {
-        Cruzamento cruzamento = new Cruzamento(
+
+        Veiculo amb1 =new Ambulancia(1, "Direita", Prioridade.EMERGENCIA);
+        amb1.pararVeiculo();
+        System.out.println(amb1.getVelocidadeA());
+        amb1.setVelocidadeA();
+        System.out.println(amb1.getVelocidadeA());
+        /*Cruzamento cruzamento = new Cruzamento(
                 "Avenida Central",
                 "Rua B");
 
@@ -25,7 +23,7 @@ public class Main {
         cruzamento.trocarSemaforos();
 
     
-     List<Veiculo> listaDeVeiculos = new ArrayList<>();
+    List<Veiculo> listaDeVeiculos = new ArrayList<>();
 
         // 2. Instanciando cada um dos veículos com seus dados específicos
         // Nota: O ID é sequencial e a Prioridade vem do Enum
@@ -73,6 +71,6 @@ public class Main {
         // Simulando uma frenagem geral no trânsito
         System.out.println("\n--- 🛑 Frenagem no Semáforo ---");
         carroCivil.freiar();
-        motoEntrega.freiar();
+        motoEntrega.freiar();*/
     }
 }
