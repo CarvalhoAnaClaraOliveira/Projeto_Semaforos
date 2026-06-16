@@ -42,4 +42,8 @@ public class Semaforo {
                 + tempoAberto
         );
     }
+
+    public int getStatus() {
+        return this.status;
+    }
 }

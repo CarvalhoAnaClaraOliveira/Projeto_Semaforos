@@ -17,6 +17,12 @@ public class Cruzamento {
         this.ruaHorizontal = ruaHorizontal;
         this.ruaVertical = ruaVertical;
 
+        // === ADIÇÃO DE CONVERSÃO DE DADOS (SEM APAGAR NADA) ===
+        // Inicializa semáforos atribuídos às respectivas ruas
+        this.semaforoHorizontal = new Semaforo(ruaHorizontal.getNome(), 5);
+        this.semaforoVertical = new Semaforo(ruaVertical.getNome(), 5);
+        this.semaforoHorizontal.abrir();
+        this.semaforoVertical.fechar();
     }
 
     public int getNumero() {

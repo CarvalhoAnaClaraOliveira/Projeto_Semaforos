@@ -101,7 +101,7 @@ public class Cidade {
                                 ruas.get(v)
                         )
 
-                );
+                    );
 
                 numero++;
 
@@ -125,4 +125,11 @@ public class Cidade {
 
     }
 
+    public ArrayList<Rua> getRuas() {
+        return this.ruas;
+    }
+
+    public ArrayList<Cruzamento> getCruzamentos() {
+        return this.cruzamentos;
+    }
 }

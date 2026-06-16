@@ -23,7 +23,8 @@ public class Rua {
         this.veiculos = new ArrayList<>();
         this.cruzamentos = new ArrayList<>();
 
-        this.sensor = null;
+        // Modificado de null para que cada rua possua de fato o seu sensor instanciado
+        this.sensor = new Sensor(this);
 
     }
 

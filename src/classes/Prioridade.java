@@ -1,6 +1,5 @@
 package classes;
 
-//definir a prioridade dos veiculos
 public enum Prioridade {
     BAIXA(2),
     ALTA(1),
