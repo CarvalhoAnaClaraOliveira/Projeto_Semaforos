@@ -36,6 +36,6 @@ public class Pedestre{
     public void setVelocidade(int velocidade) {
         this.velocidade = velocidade;
     }
-    
+
 
 }

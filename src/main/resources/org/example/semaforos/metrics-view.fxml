@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.semaforos.DashboardMetricsController"
+            styleClass="root">
+
+    <!-- Cabeçalho -->
+    <top>
+        <VBox styleClass="header" spacing="10">
+            <padding>
+                <Insets bottom="15" left="15" right="15" top="15"/>
+            </padding>
+
+            <Label text="🚦 SISTEMA INTELIGENTE DE GERENCIAMENTO DE SEMÁFOROS"
+                   styleClass="header-title"/>
+
+            <HBox spacing="20" style="-fx-background-color: #34495e; -fx-padding: 10px;" alignment="CENTER_LEFT">
+                <Label fx:id="labelTotalVeiculos" text="📊 Total de Veículos: 0" styleClass="label-metric"/>
+                <Separator orientation="VERTICAL"/>
+                <Label fx:id="labelCruzamentosAtivos" text="🔄 Cruzamentos: 16" styleClass="label-metric"/>
+                <Separator orientation="VERTICAL"/>
+                <Label fx:id="labelSemaforosStatus" text="🟢 Semáforos: 0" styleClass="label-metric"/>
+            </HBox>
+
+        </VBox>
+    </top>
+
+    <!-- Área Central com Abas -->
+    <center>
+        <TabPane styleClass="tab-pane" tabClosingPolicy="UNAVAILABLE">
+
+            <!-- Aba Dashboard -->
+            <Tab text="📊 Dashboard" closable="false">
+                <ScrollPane fitToWidth="true">
+                    <VBox spacing="15" styleClass="dashboard-container">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20"/>
+                        </padding>
+
+                        <Label text="Métricas em Tempo Real" styleClass="label-title"/>
+
+                        <!-- Grid de Métricas -->
+                        <GridPane hgap="15" vgap="15" style="-fx-background-color: #ecf0f1; -fx-padding: 15;">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="25"/>
+                                <ColumnConstraints percentWidth="25"/>
+                                <ColumnConstraints percentWidth="25"/>
+                                <ColumnConstraints percentWidth="25"/>
+                            </columnConstraints>
+
+                            <!-- Aqui serão adicionados os tiles dinamicamente via código Java -->
+
+                        </GridPane>
+
+                        <Separator/>
+
+                        <Label text="📋 Informações Gerais" styleClass="label-title"/>
+
+                        <!-- Tabela de Ruas -->
+                        <TableView fx:id="tableRuas" prefHeight="250">
+                            <columns>
+                                <TableColumn text="Rua" prefWidth="80"/>
+                                <TableColumn text="Orientação" prefWidth="100"/>
+                                <TableColumn text="Sentido" prefWidth="100"/>
+                                <TableColumn text="Veículos" prefWidth="80"/>
+                                <TableColumn text="Status" prefWidth="100"/>
+                            </columns>
+                        </TableView>
+
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+
+            <!-- Aba Cruzamentos -->
+            <Tab text="🔀 Cruzamentos" closable="false">
+                <ScrollPane fitToWidth="true">
+                    <VBox spacing="15">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20"/>
+                        </padding>
+
+                        <Label text="Status dos Cruzamentos" styleClass="label-title"/>
+
+                        <GridPane fx:id="gridCruzamentos" hgap="15" vgap="15"
+                                  style="-fx-padding: 15; -fx-background-color: #ecf0f1;">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="25"/>
+                                <ColumnConstraints percentWidth="25"/>
+                                <ColumnConstraints percentWidth="25"/>
+                                <ColumnConstraints percentWidth="25"/>
+                            </columnConstraints>
+                        </GridPane>
+
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+
+            <!-- Aba Ruas -->
+            <Tab text="🛣️ Ruas" closable="false">
+                <ScrollPane fitToWidth="true">
+                    <VBox spacing="15">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20"/>
+                        </padding>
+
+                        <Label text="Monitoramento de Ruas" styleClass="label-title"/>
+
+                        <GridPane fx:id="gridRuas" hgap="20" vgap="15"
+                                  style="-fx-padding: 15; -fx-background-color: #ecf0f1;">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="50"/>
+                                <ColumnConstraints percentWidth="50"/>
+                            </columnConstraints>
+                        </GridPane>
+
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+
+            <!-- Aba Gráficos -->
+            <Tab text="📈 Gráficos" closable="false">
+                <VBox spacing="15">
+                    <padding>
+                        <Insets bottom="20" left="20" right="20" top="20"/>
+                    </padding>
+
+                    <Label text="Gráficos de Desempenho" styleClass="label-title"/>
+
+                    <!-- Gráfico será adicionado dinamicamente -->
+                    <VBox fx:id="chartContainer" style="-fx-border-color: #bdc3c7; -fx-border-width: 1; -fx-padding: 15;"/>
+
+                </VBox>
+            </Tab>
+
+            <!-- Aba Controles -->
+            <Tab text="⚙️ Controles" closable="false">
+                <VBox spacing="15">
+                    <padding>
+                        <Insets bottom="20" left="20" right="20" top="20"/>
+                    </padding>
+
+                    <Label text="Controles do Sistema" styleClass="label-title"/>
+
+                    <VBox spacing="10" style="-fx-border-color: #bdc3c7; -fx-border-width: 1; -fx-padding: 15; -fx-background-color: white;">
+
+                        <Label text="Gerenciamento de Semáforos" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+
+                        <HBox spacing="10">
+                            <Button text="▶️ Iniciar Sistema" style="-fx-padding: 10px 15px; -fx-font-size: 12px;"/>
+                            <Button text="⏸️ Pausar Sistema" style="-fx-padding: 10px 15px; -fx-font-size: 12px;"/>
+                            <Button text="⏹️ Parar Sistema" style="-fx-padding: 10px 15px; -fx-font-size: 12px;"/>
+                        </HBox>
+
+                        <Separator/>
+
+                        <Label text="Modo de Operação" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+
+                        <HBox spacing="10">
+                            <RadioButton text="Automático (IA Adaptativa)" selected="true"/>
+                            <RadioButton text="Manual"/>
+                            <RadioButton text="Predefinido"/>
+                        </HBox>
+
+                        <Separator/>
+
+                        <Label text="Velocidade de Simulação" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Slider fx:id="sliderVelocidade" min="0.5" max="3" value="1" prefWidth="300"/>
+                            <Label fx:id="labelVelocidade" text="1.0x"/>
+                        </HBox>
+
+                    </VBox>
+
+                </VBox>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+    <!-- Rodapé -->
+    <bottom>
+        <HBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 10px;">
+            <padding>
+                <Insets bottom="10" left="20" right="20" top="10"/>
+            </padding>
+
+            <Label fx:id="labelStatus" text="✓ Sistema Rodando" style="-fx-text-fill: #2ecc71; -fx-font-weight: bold;"/>
+            <Separator orientation="VERTICAL"/>
+            <Label fx:id="labelTempo" text="Tempo: 0s" style="-fx-text-fill: white;"/>
+            <Separator orientation="VERTICAL"/>
+            <Label fx:id="labelFPS" text="FPS: 60" style="-fx-text-fill: white;"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Label text="v1.0 - Sistema de Gerenciamento de Semáforos Inteligentes"
+                   style="-fx-text-fill: #95a5a6; -fx-font-size: 10px;"/>
+
+        </HBox>
+    </bottom>
+
+</BorderPane>

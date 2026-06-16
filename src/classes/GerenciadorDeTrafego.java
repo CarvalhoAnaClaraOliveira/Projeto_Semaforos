@@ -265,7 +265,7 @@ public class GerenciadorDeTrafego implements Runnable {
                 System.out.println("[" + v.getIdUnico() + "] passou pelo Cruzamento #" + c.getNumero() + " e avançou para a rua " + proximaRua.getNome());
             } else {
                 // Chegou ao fim: retorna ao cruzamento inicial para ser excluído
-                Cruzamento inicial = p.getCruzamentos().get(0);
+                Cruzamento inicial = p.getCruzamentoAtual();
                 System.out.println("[" + v.getIdUnico() + "] completou seu trajeto pré-definido de 10 cruzamentos, retornou ao ponto inicial (Cruzamento #" + inicial.getNumero() + ") e foi EXCLUÍDO da cidade.");
             }
         } else {

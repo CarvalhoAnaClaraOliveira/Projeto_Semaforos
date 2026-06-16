@@ -1,0 +1,165 @@
+﻿.\mvnw.cmd : WARNING: A restricted method in java.lang.System has been called
+No linha:2 caractere:26
++ ... o_Semaforos; .\mvnw.cmd compile -DskipTests 2>&1 > build3.log; Select ...
++                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (WARNING: A rest...has been called:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+WARNING: java.lang.System::load has been called by org.fusesource.jansi.internal.JansiLoader in an unnamed module (file
+:/C:/Users/Maze/.m2/wrapper/dists/apache-maven-3.8.5-bin/5i5jha092a3i37g0paqnfr15e0/apache-maven-3.8.5/lib/jansi-2.4.0.
+jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by 
+com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper (file:/C:/Users/Maze/.m2/wrapper/dists/apache-maven
+-3.8.5-bin/5i5jha092a3i37g0paqnfr15e0/apache-maven-3.8.5/lib/guava-25.1-android.jar)
+WARNING: Please consider reporting this to the maintainers of class 
+com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< org.example:Semaforos >------------------------
+[INFO] Building Semaforos 1.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ Semaforos ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 12 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.13.0:compile (default-compile) @ Semaforos ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 18 source files with javac [debug target 8] to target\classes
+[INFO] -------------------------------------------------------------
+[WARNING] COMPILATION WARNING : 
+[INFO] -------------------------------------------------------------
+[WARNING] bootstrap class path is not set in conjunction with -source 8
+  not setting the bootstrap class path may lead to class files that cannot run on JDK 8
+    --release 8 is recommended instead of -source 8 -target 8 because it sets the bootstrap class path automatically
+[WARNING] source value 8 is obsolete and will be removed in a future release
+[WARNING] target value 8 is obsolete and will be removed in a future release
+[WARNING] To suppress warnings about obsolete options, use -Xlint:-options.
+[INFO] 4 warnings 
+[INFO] -------------------------------------------------------------
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/GerenciadorDeTrafego.java:[3,8] class GerenciadorTrafego is public, should be declared in a file named GerenciadorTrafego.java
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Carro.java:[3,28] cannot find symbol
+  symbol: class TipoVeiculo
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Moto.java:[3,28] cannot find symbol
+  symbol: class TipoVeiculo
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Ambulancia.java:[3,8] classes.Ambulancia is not abstract and does not override abstract method freiar() in classes.Veiculo
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Ambulancia.java:[11,9] constructor Veiculo in class classes.Veiculo cannot be applied to given types;
+  required: int,java.lang.String,java.lang.String,int,java.lang.String,classes.Prioridade
+  found:    int,java.lang.String,classes.Prioridade
+  reason: actual and formal argument lists differ in length
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Ambulancia.java:[12,9] cannot find symbol
+  symbol:   method setVelocidadeC(int)
+  location: class classes.Ambulancia
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Ambulancia.java:[13,9] cannot find symbol
+  symbol:   method setVelocidadeA()
+  location: class classes.Ambulancia
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Bombeiro.java:[3,8] classes.Bombeiro is not abstract and does not override abstract method freiar() in classes.Veiculo
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Bombeiro.java:[10,9] constructor Veiculo in class classes.Veiculo cannot be applied to given types;
+  required: int,java.lang.String,java.lang.String,int,java.lang.String,classes.Prioridade
+  found:    int,java.lang.String,classes.Prioridade
+  reason: actual and formal argument lists differ in length
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Bombeiro.java:[11,9] cannot find symbol
+  symbol:   method setVelocidadeC(int)
+  location: class classes.Bombeiro
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Bombeiro.java:[12,9] cannot find symbol
+  symbol:   method setVelocidadeA()
+  location: class classes.Bombeiro
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/GerenciadorDeTrafego.java:[112,17] incompatible types: classes.Veiculo cannot be converted to classes.Pedestre
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/GerenciadorDeTrafego.java:[127,23] incompatible types: classes.Veiculo cannot be converted to classes.Pedestre
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/GerenciadorDeTrafego.java:[128,22] cannot find symbol
+  symbol:   method pararVeiculo()
+  location: variable v of type classes.Veiculo
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/GerenciadorDeTrafego.java:[143,25] incompatible types: classes.Veiculo cannot be converted to classes.Pedestre
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/GerenciadorDeTrafego.java:[147,26] cannot find symbol
+  symbol:   method setVelocidadeA()
+  location: variable v of type classes.Veiculo
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/GerenciadorDeTrafego.java:[158,25] incompatible types: classes.Veiculo cannot be converted to classes.Pedestre
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/GerenciadorDeTrafego.java:[162,26] cannot find symbol
+  symbol:   method setVelocidadeA()
+  location: variable v of type classes.Veiculo
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Policia.java:[3,8] classes.Policia is not abstract and does not override abstract method freiar() in classes.Veiculo
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Policia.java:[10,9] constructor Veiculo in class classes.Veiculo cannot be applied to given types;
+  required: int,java.lang.String,java.lang.String,int,java.lang.String,classes.Prioridade
+  found:    int,java.lang.String,classes.Prioridade
+  reason: actual and formal argument lists differ in length
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Policia.java:[11,9] cannot find symbol
+  symbol:   method setVelocidadeC(int)
+  location: class classes.Policia
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Policia.java:[12,9] cannot find symbol
+  symbol:   method setVelocidadeA()
+  location: class classes.Policia
+[INFO] 22 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.695 s
+[INFO] Finished at: 2026-06-16T14:06:50-03:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project Semaforos: Compilation failure: Compilation failure: 
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/GerenciadorDeTrafego.java:[3,8] class GerenciadorTrafego is public, should be declared in a file named GerenciadorTrafego.java
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Carro.java:[3,28] cannot find symbol
+[ERROR]   symbol: class TipoVeiculo
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Moto.java:[3,28] cannot find symbol
+[ERROR]   symbol: class TipoVeiculo
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Ambulancia.java:[3,8] classes.Ambulancia is not abstract and does not override abstract method freiar() in classes.Veiculo
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Ambulancia.java:[11,9] constructor Veiculo in class classes.Veiculo cannot be applied to given types;
+[ERROR]   required: int,java.lang.String,java.lang.String,int,java.lang.String,classes.Prioridade
+[ERROR]   found:    int,java.lang.String,classes.Prioridade
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Ambulancia.java:[12,9] cannot find symbol
+[ERROR]   symbol:   method setVelocidadeC(int)
+[ERROR]   location: class classes.Ambulancia
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Ambulancia.java:[13,9] cannot find symbol
+[ERROR]   symbol:   method setVelocidadeA()
+[ERROR]   location: class classes.Ambulancia
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Bombeiro.java:[3,8] classes.Bombeiro is not abstract and does not override abstract method freiar() in classes.Veiculo
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Bombeiro.java:[10,9] constructor Veiculo in class classes.Veiculo cannot be applied to given types;
+[ERROR]   required: int,java.lang.String,java.lang.String,int,java.lang.String,classes.Prioridade
+[ERROR]   found:    int,java.lang.String,classes.Prioridade
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Bombeiro.java:[11,9] cannot find symbol
+[ERROR]   symbol:   method setVelocidadeC(int)
+[ERROR]   location: class classes.Bombeiro
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Bombeiro.java:[12,9] cannot find symbol
+[ERROR]   symbol:   method setVelocidadeA()
+[ERROR]   location: class classes.Bombeiro
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/GerenciadorDeTrafego.java:[112,17] incompatible types: classes.Veiculo cannot be converted to classes.Pedestre
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/GerenciadorDeTrafego.java:[127,23] incompatible types: classes.Veiculo cannot be converted to classes.Pedestre
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/GerenciadorDeTrafego.java:[128,22] cannot find symbol
+[ERROR]   symbol:   method pararVeiculo()
+[ERROR]   location: variable v of type classes.Veiculo
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/GerenciadorDeTrafego.java:[143,25] incompatible types: classes.Veiculo cannot be converted to classes.Pedestre
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/GerenciadorDeTrafego.java:[147,26] cannot find symbol
+[ERROR]   symbol:   method setVelocidadeA()
+[ERROR]   location: variable v of type classes.Veiculo
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/GerenciadorDeTrafego.java:[158,25] incompatible types: classes.Veiculo cannot be converted to classes.Pedestre
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/GerenciadorDeTrafego.java:[162,26] cannot find symbol
+[ERROR]   symbol:   method setVelocidadeA()
+[ERROR]   location: variable v of type classes.Veiculo
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Policia.java:[3,8] classes.Policia is not abstract and does not override abstract method freiar() in classes.Veiculo
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Policia.java:[10,9] constructor Veiculo in class classes.Veiculo cannot be applied to given types;
+[ERROR]   required: int,java.lang.String,java.lang.String,int,java.lang.String,classes.Prioridade
+[ERROR]   found:    int,java.lang.String,classes.Prioridade
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Policia.java:[11,9] cannot find symbol
+[ERROR]   symbol:   method setVelocidadeC(int)
+[ERROR]   location: class classes.Policia
+[ERROR] /D:/Projeto_Semaforos/src/main/java/classes/Policia.java:[12,9] cannot find symbol
+[ERROR]   symbol:   method setVelocidadeA()
+[ERROR]   location: class classes.Policia
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
