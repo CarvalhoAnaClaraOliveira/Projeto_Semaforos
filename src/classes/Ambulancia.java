@@ -2,12 +2,13 @@ package classes;
 
 public class Ambulancia extends Veiculo {
     private int[] posicao;
+    private Percurso p1;
     
 
     public Ambulancia(
         int id,
         String direcao,
-        Prioridade prioridade
+        Prioridade prioridade, Percurso p1
         
     ) 
     {
@@ -15,6 +16,7 @@ public class Ambulancia extends Veiculo {
         setVelocidadeC(20);
         setVelocidadeA();
         this.posicao = new int[]{0,0};
+        this.p1 = p1;
     }
 
 

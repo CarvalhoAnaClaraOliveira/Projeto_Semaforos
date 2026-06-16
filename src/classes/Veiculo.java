@@ -7,7 +7,6 @@ public abstract class Veiculo {
     private int id;
     private String direcao;
     private int velocidadeA;
-    private boolean sireneLigada;
     private Prioridade prioridade;
     private int velocidadeC;
 
@@ -20,19 +19,6 @@ public abstract class Veiculo {
         this.direcao=direcao;
         this.prioridade=prioridade;
         }
-
-    /////////////// SIRENE /////////////////
-    public void ligarSirene() {
-        sireneLigada = true;
-    }
-
-    public void desligarSirene() {
-        sireneLigada = false;
-    }
-
-    public boolean isSireneLigada() {
-        return sireneLigada;
-    }
 
     ///////////////// PRIORIDADE  ///////////////////////
     public Prioridade getPrioridade() {
@@ -83,9 +69,5 @@ public abstract class Veiculo {
         this.velocidadeA = velocidadeA;
     }
 
-    public void setSireneLigada(boolean sireneLigada) {
-        this.sireneLigada = sireneLigada;
-    }
-    
 
 }

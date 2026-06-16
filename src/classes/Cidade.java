@@ -9,6 +9,9 @@ public class Cidade {
 
         private Percurso p1 = new Percurso( ruas.get(4),ruas.get(4),ruas.get(2), ruas.get(2), ruas.get(2), ruas.get(7));
 
+        public Percurso getMinhaLista() {
+        return p1;}
+
         public Cidade() {
         ruas = new ArrayList<>();
         cruzamentos = new ArrayList<>();

@@ -12,20 +12,18 @@ public class Main {
         /*c1.mostrarCruzamentos();
         c1.mostrarCidade();*/
 
-        Veiculo amb1 = new Ambulancia(1, "Direita", Prioridade.EMERGENCIA);
+        Veiculo amb1 = new Ambulancia(1, "Direita", Prioridade.EMERGENCIA, c1.getMinhaLista());
         
         try {
             System.out.println("Iniciando percurso ambulancia teste");
-            for(int i=0; i<6;i++){
+            for(int i=0; i<(40/amb1.getVelocidadeC());i++){
                 Thread.sleep(2000);
                 if(amb1.getDirecao() == "DIREITA"){
-                    amb1.setPosicaoH();
                 } else if(amb1.getDirecao() == "ESQUERDA"){
                     
                 }else if(amb1.getDirecao() == "CIMA"){
                     
                 }else if(amb1.getDirecao() == "BAIXO"){
-                    amb1.setPosicaoV();
                 }
             }
             

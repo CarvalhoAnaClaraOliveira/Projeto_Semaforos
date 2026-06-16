@@ -7,6 +7,7 @@ public class Pedestre{
     private String direcao;
     private int velocidadeA;
     private int velocidadeC;
+    private Prioridade prioridade;
 
     public Pedestre(
         int id,
@@ -17,6 +18,7 @@ public class Pedestre{
         this.direcao = direcao;
         this.velocidadeC = 10;
         this.velocidadeA = this.velocidadeC;
+        this.prioridade = prioridade.ALTA;
     }
 
     public int getId() {
