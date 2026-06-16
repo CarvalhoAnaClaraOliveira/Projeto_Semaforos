@@ -11,6 +11,9 @@ public class Rua {
     private ArrayList<Cruzamento> cruzamentos;
     private Sensor sensor;
 
+    // === ADIÇÃO DE SUPORTE AO SEU PEDESTRE INDEPENDENTE (SEM REMOVER NADA) ===
+    private ArrayList<Pedestre> pedestres = new ArrayList<>();
+
     public Rua(
             String nome,
             String orientacao,
@@ -88,6 +91,19 @@ public class Rua {
                 "Quantidade de cruzamentos: "
                         + cruzamentos.size());
 
+    }
+
+    // === MÉTODOS ADICIONADOS PARA MANIPULAÇÃO DE PEDESTRES ===
+    public synchronized void adicionarPedestre(Pedestre pedestre) {
+        pedestres.add(pedestre);
+    }
+
+    public synchronized void removerPedestre(Pedestre pedestre) {
+        pedestres.remove(pedestre);
+    }
+
+    public synchronized ArrayList<Pedestre> getPedestres() {
+        return new ArrayList<>(pedestres);
     }
 
 }

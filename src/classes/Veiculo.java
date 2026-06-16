@@ -62,4 +62,37 @@ public abstract class Veiculo {
         return velocidadeA;
     }
 
+    // === ADIÇÕES PARA SUPORTE AO ID ÚNICO E PERCURSO (SEM REMOVER NADA) ===
+    private Percurso percurso;
+    private double kmPercorridoNaRuaAtual = 0.0;
+
+    // Gera dinamicamente o ID Único (Ex: CA1, AM3, PE1) com base na classe do objeto
+    public String getIdUnico() {
+        String nomeClasse = getClass().getSimpleName();
+        String prefixo;
+        if (nomeClasse.equalsIgnoreCase("Ambulancia")) prefixo = "AM";
+        else if (nomeClasse.equalsIgnoreCase("Bombeiro")) prefixo = "BO";
+        else if (nomeClasse.equalsIgnoreCase("Policia")) prefixo = "PO";
+        else if (nomeClasse.equalsIgnoreCase("Pedestre")) prefixo = "PE";
+        else if (nomeClasse.equalsIgnoreCase("Onibus")) prefixo = "ON";
+        else if (nomeClasse.equalsIgnoreCase("Moto")) prefixo = "MO";
+        else prefixo = "CA"; // Carro
+        return prefixo + id;
+    }
+
+    public Percurso getPercurso() {
+        return percurso;
+    }
+
+    public void setPercurso(Percurso percurso) {
+        this.percurso = percurso;
+    }
+
+    public double getKmPercorridoNaRuaAtual() {
+        return kmPercorridoNaRuaAtual;
+    }
+
+    public void setKmPercorridoNaRuaAtual(double km) {
+        this.kmPercorridoNaRuaAtual = km;
+    }
 }
