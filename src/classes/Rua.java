@@ -3,23 +3,22 @@ package classes;
 import java.util.ArrayList;
 
 public class Rua {
+    /// RUA COM TAMANHO FISICO CTE 120
 
     private String nome;
-    private String orientacao;
     private String sentido;
+    private int tamanho;
     private ArrayList<Veiculo> veiculos;
     private ArrayList<Cruzamento> cruzamentos;
     private Sensor sensor;
 
     public Rua(
             String nome,
-            String orientacao,
             String sentido) {
 
         this.nome = nome;
-        this.orientacao = orientacao;
         this.sentido = sentido;
-
+        this.tamanho = 120;
         this.veiculos = new ArrayList<>();
         this.cruzamentos = new ArrayList<>();
 
@@ -47,9 +46,6 @@ public class Rua {
         return nome;
     }
 
-    public String getOrientacao() {
-        return orientacao;
-    }
 
     public String getSentido() {
         return sentido;
@@ -70,10 +66,6 @@ public class Rua {
     public void mostrarInformacoes() {
 
         System.out.println("Rua: " + nome);
-
-        System.out.println(
-                "Orientação: "
-                        + orientacao);
 
         System.out.println(
                 "Sentido: "

@@ -4,25 +4,23 @@ import java.util.ArrayList;
 
 public class Cidade {
 
-    private ArrayList<Rua> ruas;
-    private ArrayList<Cruzamento> cruzamentos;
+        private ArrayList<Rua> ruas;
+        private ArrayList<Cruzamento> cruzamentos;
 
-    public Cidade() {
+        private Percurso p1 = new Percurso( ruas.get(4),ruas.get(4),ruas.get(2), ruas.get(2), ruas.get(2), ruas.get(7));
 
+        public Cidade() {
         ruas = new ArrayList<>();
         cruzamentos = new ArrayList<>();
-
         criarRuas();
         criarCruzamentos();
+        }
 
-    }
-
-    private void criarRuas() {
+        private void criarRuas() {
 
         ruas.add(
                 new Rua(
                         "H1",
-                        "HORIZONTAL",
                         "DIREITA"
                 )
         );
@@ -30,7 +28,6 @@ public class Cidade {
         ruas.add(
                 new Rua(
                         "H2",
-                        "HORIZONTAL",
                         "ESQUERDA"
                 )
         );
@@ -38,7 +35,6 @@ public class Cidade {
         ruas.add(
                 new Rua(
                         "H3",
-                        "HORIZONTAL",
                         "DIREITA"
                 )
         );
@@ -46,7 +42,6 @@ public class Cidade {
         ruas.add(
                 new Rua(
                         "H4",
-                        "HORIZONTAL",
                         "ESQUERDA"
                 )
         );
@@ -54,7 +49,6 @@ public class Cidade {
         ruas.add(
                 new Rua(
                         "V1",
-                        "VERTICAL",
                         "BAIXO"
                 )
         );
@@ -62,7 +56,6 @@ public class Cidade {
         ruas.add(
                 new Rua(
                         "V2",
-                        "VERTICAL",
                         "CIMA"
                 )
         );
@@ -70,7 +63,6 @@ public class Cidade {
         ruas.add(
                 new Rua(
                         "V3",
-                        "VERTICAL",
                         "BAIXO"
                 )
         );
@@ -78,40 +70,34 @@ public class Cidade {
         ruas.add(
                 new Rua(
                         "V4",
-                        "VERTICAL",
                         "CIMA"
                 )
         );
 
-    }
+        }
 
     private void criarCruzamentos() {
-
         int numero = 1;
-
+        int[] posicao ;
         for (int h = 0; h < 4; h++) {
-
             for (int v = 4; v < 8; v++) {
-
-                cruzamentos.add(
-
-                        new Cruzamento(
-                                numero,
-                                ruas.get(h),
-                                ruas.get(v)
-                        )
-
-                );
-
+                posicao = new int[]{h*40,(v-4)*40};
+                cruzamentos.add(new Cruzamento(numero, ruas.get(h), ruas.get(v),posicao));
                 numero++;
-
+                
             }
 
         }
 
     }
 
-    public void mostrarCidade() {
+    public void mostrarCruzamentos(){
+        for(int i = 0; i< cruzamentos.size(); i++){
+                System.out.println(cruzamentos.get(i).getPosicao()[0] + ", " + cruzamentos.get(i).getPosicao()[1]);
+        }
+    }
+
+        public void mostrarCidade() {
 
         System.out.println(
                 "Quantidade de ruas: "
@@ -123,6 +109,6 @@ public class Cidade {
                 + cruzamentos.size()
         );
 
-    }
+        }
 
 }

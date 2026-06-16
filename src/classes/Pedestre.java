@@ -1,16 +1,22 @@
 package classes;
 
+
+/// colocar velocidade atual e constante
 public class Pedestre{
     private int id;
     private String direcao;
-    private int velocidade;
-    int parado =0;
-    int andando = 5;
+    private int velocidadeA;
+    private int velocidadeC;
 
-    public Pedestre(int id, String direcao){
-        this.id = id;
+    public Pedestre(
+        int id,
+        String direcao
+    ) 
+    {
+        this.id =id;
         this.direcao = direcao;
-        this.velocidade = andando;
+        this.velocidadeC = 10;
+        this.velocidadeA = this.velocidadeC;
     }
 
     public int getId() {
@@ -29,13 +35,11 @@ public class Pedestre{
         this.direcao = direcao;
     }
 
-    public int getVelocidade() {
-        return velocidade;
+    public void setVelocidadeA(){
+        this.velocidadeA = this.velocidadeC;
     }
-
-    public void setVelocidade(int velocidade) {
-        this.velocidade = velocidade;
+    public int getVelocidadeA(){
+        return this.velocidadeA;
     }
-    
 
 }

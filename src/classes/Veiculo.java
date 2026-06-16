@@ -62,4 +62,30 @@ public abstract class Veiculo {
         return velocidadeA;
     }
 
+    ///////////////////// OUTROS ///////////////
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDirecao() {
+        return direcao;
+    }
+
+    public void setDirecao(String direcao) {
+        this.direcao = direcao;
+    }
+
+    public void setVelocidadeA(int velocidadeA) {
+        this.velocidadeA = velocidadeA;
+    }
+
+    public void setSireneLigada(boolean sireneLigada) {
+        this.sireneLigada = sireneLigada;
+    }
+    
+
 }

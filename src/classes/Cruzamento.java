@@ -1,23 +1,28 @@
 package classes;
 
+
+
 public class Cruzamento {
 
     private int numero;
     private Rua ruaHorizontal;
     private Rua ruaVertical;
+    private int[] posicao = new int[2];
     private Semaforo semaforoHorizontal;
     private Semaforo semaforoVertical;
 
     public Cruzamento(
             int numero,
             Rua ruaHorizontal,
-            Rua ruaVertical) {
+            Rua ruaVertical, int[] posicao) {
 
         this.numero = numero;
         this.ruaHorizontal = ruaHorizontal;
         this.ruaVertical = ruaVertical;
+        this.posicao = posicao;
 
     }
+    
 
     public int getNumero() {
         return numero;
@@ -59,6 +64,11 @@ public class Cruzamento {
                 "Rua Vertical: "
                         + ruaVertical.getNome());
 
+    }
+
+
+    public int[] getPosicao() {
+        return posicao;
     }
 
 }

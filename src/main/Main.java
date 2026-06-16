@@ -1,5 +1,6 @@
 package main;
 import classes.Ambulancia;
+import classes.Cidade;
 import classes.Prioridade;
 import classes.Veiculo;
 
@@ -7,11 +8,33 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Veiculo amb1 =new Ambulancia(1, "Direita", Prioridade.EMERGENCIA);
-        amb1.pararVeiculo();
-        System.out.println(amb1.getVelocidadeA());
-        amb1.setVelocidadeA();
-        System.out.println(amb1.getVelocidadeA());
+        Cidade c1 = new Cidade();
+        /*c1.mostrarCruzamentos();
+        c1.mostrarCidade();*/
+
+        Veiculo amb1 = new Ambulancia(1, "Direita", Prioridade.EMERGENCIA);
+        
+        try {
+            System.out.println("Iniciando percurso ambulancia teste");
+            for(int i=0; i<6;i++){
+                Thread.sleep(2000);
+                if(amb1.getDirecao() == "DIREITA"){
+                    amb1.setPosicaoH();
+                } else if(amb1.getDirecao() == "ESQUERDA"){
+                    
+                }else if(amb1.getDirecao() == "CIMA"){
+                    
+                }else if(amb1.getDirecao() == "BAIXO"){
+                    amb1.setPosicaoV();
+                }
+            }
+            
+            System.out.println("Continuando após 2 segundos!");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
         /*Cruzamento cruzamento = new Cruzamento(
                 "Avenida Central",
                 "Rua B");
