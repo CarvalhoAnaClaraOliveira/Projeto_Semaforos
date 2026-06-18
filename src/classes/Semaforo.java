@@ -2,7 +2,7 @@ package classes;
 
 public class Semaforo {
     private String rua;
-    private int status;
+    private volatile int status;
     private int tempoAberto;
 
     public Semaforo(String rua, int tempoAberto) {

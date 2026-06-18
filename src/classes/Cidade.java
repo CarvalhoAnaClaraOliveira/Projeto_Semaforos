@@ -92,6 +92,7 @@ public class Cidade {
                                                                 ruas.get(h),
                                                                 ruas.get(v))
 
+                );
                                 );
 
                                 numero++;
@@ -104,13 +105,15 @@ public class Cidade {
 
         public void mostrarCidade() {
 
-                System.out.println(
-                                "Quantidade de ruas: "
-                                                + ruas.size());
+        System.out.println(
+                "Quantidade de ruas: "
+                + ruas.size()
+        );
 
-                System.out.println(
-                                "Quantidade de cruzamentos: "
-                                                + cruzamentos.size());
+        System.out.println(
+                "Quantidade de cruzamentos: "
+                + cruzamentos.size()
+        );
 
         }
 
