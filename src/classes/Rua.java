@@ -10,6 +10,7 @@ public class Rua {
     private ArrayList<Veiculo> veiculos;
     private ArrayList<Cruzamento> cruzamentos;
     private Sensor sensor;
+    private double comprimento;
 
     // === ADIÇÃO DE SUPORTE AO SEU PEDESTRE INDEPENDENTE (SEM REMOVER NADA) ===
     private ArrayList<Pedestre> pedestres = new ArrayList<>();
@@ -17,11 +18,13 @@ public class Rua {
     public Rua(
             String nome,
             String orientacao,
-            String sentido) {
+            String sentido,
+            double comprimento) {
 
         this.nome = nome;
         this.orientacao = orientacao;
         this.sentido = sentido;
+        this.comprimento = comprimento;
 
         this.veiculos = new ArrayList<>();
         this.cruzamentos = new ArrayList<>();
@@ -84,6 +87,11 @@ public class Rua {
                         + sentido);
 
         System.out.println(
+                "Comprimento: "
+                 + comprimento
+                 + " km");
+
+        System.out.println(
                 "Quantidade de veículos: "
                         + getQuantidadeVeiculos());
 
@@ -93,7 +101,6 @@ public class Rua {
 
     }
 
-    // === MÉTODOS ADICIONADOS PARA MANIPULAÇÃO DE PEDESTRES ===
     public synchronized void adicionarPedestre(Pedestre pedestre) {
         pedestres.add(pedestre);
     }
@@ -106,4 +113,7 @@ public class Rua {
         return new ArrayList<>(pedestres);
     }
 
+    public double getComprimento() {
+    return comprimento;
+}
 }

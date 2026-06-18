@@ -23,7 +23,8 @@ public class Main {
         Cidade cidade = new Cidade();
         cidade.mostrarCidade();
 
-        // === ADIÇÃO: Inicialização de 3 veículos de cada tipo espalhados pela cidade ===
+        // === ADIÇÃO: Inicialização de 3 veículos de cada tipo espalhados pela cidade
+        // ===
         povoarCidadeInicialmente(cidade);
 
         // 2. Inicia o Gerenciador de Tráfego como uma Thread independente
@@ -33,79 +34,117 @@ public class Main {
 
         // 3. Thread Geradora de Tráfego de Fundo (Injeta eventos aleatórios usando os
         // seus construtores de veículos)
-        Thread geradorTráfego = new Thread(() -> {
-            Random random = new Random();
-            int idSequence = 22; // Começa após os IDs da inicialização para evitar duplicidade
+        Thread geradorTrafego = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Random random = new Random();
+                int idSequence = 22; // Começa após os IDs da inicialização para evitar duplicidade
 
-            while (true) {
-                try {
-                    // Adiciona um novo elemento a cada 1 a 3 segundos
-                    Thread.sleep(1000 + random.nextInt(2000));
+                while (true) {
+                    try {
+                        // Adiciona um novo elemento a cada 1 a 3 segundos
+                        Thread.sleep(1000 + random.nextInt(2000));
 
-                    Rua ruaEscolhida = cidade.getRuas().get(random.nextInt(cidade.getRuas().size()));
-                    int trajetoId = random.nextInt(10);
-                    Percurso trajeto = Percurso.obterTrajetoPreDefinido(trajetoId, cidade);
+                        Rua ruaEscolhida = cidade.getRuas().get(random.nextInt(cidade.getRuas().size()));
+                        int trajetoId = random.nextInt(10);
+                        Percurso trajeto = Percurso.obterTrajetoPreDefinido(trajetoId, cidade);
 
-                    double sorteio = random.nextDouble();
-                    synchronized (ruaEscolhida.getVeiculos()) {
-                        if (sorteio < 0.35) {
-                            // 35% de chance: Carro normal (Prioridade Baixa)
-                            Carro carro = new Carro(idSequence++, "FRENTE", Prioridade.BAIXA);
-                            carro.setPercurso(trajeto);
-                            ruaEscolhida.adicionarVeiculo(carro);
-                            System.out.println("-> [" + carro.getIdUnico() + "] Injetado com Trajeto " + trajetoId + " na rua: " + ruaEscolhida.getNome());
-                        } else if (sorteio < 0.50) {
-                            // 15% de chance: Moto (Prioridade Baixa)
-                            Moto moto = new Moto(idSequence++, "FRENTE", Prioridade.BAIXA);
-                            moto.setPercurso(trajeto);
-                            ruaEscolhida.adicionarVeiculo(moto);
-                            System.out.println("-> [" + moto.getIdUnico() + "] Injetada com Trajeto " + trajetoId + " na rua: " + ruaEscolhida.getNome());
-                        } else if (sorteio < 0.65) {
-                            // 15% de chance: Ônibus (Prioridade Alta)
-                            Onibus onibus = new Onibus(idSequence++, "FRENTE", Prioridade.ALTA);
-                            onibus.setPercurso(trajeto);
-                            ruaEscolhida.adicionarVeiculo(onibus);
-                            System.out.println("-> [" + onibus.getIdUnico() + "] Injetado com Trajeto " + trajetoId + " na rua: " + ruaEscolhida.getNome());
-                        } else if (sorteio < 0.80) {
-                            // 15% de chance: Pedestre atravessando fora do sinal (Prioridade Alta)
-                            // CORRIGIDO: Usa o seu construtor correto e adiciona na lista de pedestres da rua
-                            Pedestre pedestre = new Pedestre(idSequence++, "TRAVESSIA");
-                            ruaEscolhida.adicionarPedestre(pedestre);
-                            System.out.println("-> [PE" + pedestre.getId() + "] Iniciou travessia na rua: " + ruaEscolhida.getNome());
-                        } else {
-                            // 20% de chance distribuídos entre veículos de Emergência (Prioridade
-                            // Emergência)
-                            double tipoEmergencia = random.nextDouble();
-                            if (tipoEmergencia < 0.33) {
-                                Ambulancia ambulancia = new Ambulancia(idSequence++, "FRENTE", Prioridade.EMERGENCIA);
-                                ambulancia.setPercurso(trajeto);
-                                ruaEscolhida.adicionarVeiculo(ambulancia);
-                                System.out.println("-> [" + ambulancia.getIdUnico() + "] Iniciou código de emergência na rua: "
-                                        + ruaEscolhida.getNome());
-                            } else if (tipoEmergencia < 0.66) {
-                                Bombeiro bombeiro = new Bombeiro(idSequence++, "FRENTE", Prioridade.EMERGENCIA);
-                                bombeiro.setPercurso(trajeto);
-                                ruaEscolhida.adicionarVeiculo(bombeiro);
-                                System.out.println("-> [" + bombeiro.getIdUnico() + "] Iniciou código de emergência na rua: "
+                        double sorteio = random.nextDouble();
+                        synchronized (ruaEscolhida.getVeiculos()) {
+                            if (sorteio < 0.35) {
+                                // 35% de chance: Carro normal (Prioridade Baixa)
+                                Carro carro = new Carro(idSequence++, "FRENTE", Prioridade.BAIXA);
+                                carro.setPercurso(trajeto);
+                                ruaEscolhida.adicionarVeiculo(carro);
+                                System.out.println("-> [" + carro.getIdUnico() + "] Injetado com Trajeto " + trajetoId
+                                        + " na rua: " + ruaEscolhida.getNome());
+                            } else if (sorteio < 0.50) {
+                                // 15% de chance: Moto (Prioridade Baixa)
+                                Moto moto = new Moto(idSequence++, "FRENTE", Prioridade.BAIXA);
+                                moto.setPercurso(trajeto);
+                                ruaEscolhida.adicionarVeiculo(moto);
+                                System.out.println("-> [" + moto.getIdUnico() + "] Injetada com Trajeto " + trajetoId
+                                        + " na rua: " + ruaEscolhida.getNome());
+                            } else if (sorteio < 0.65) {
+                                // 15% de chance: Ônibus (Prioridade Alta)
+                                Onibus onibus = new Onibus(idSequence++, "FRENTE", Prioridade.ALTA);
+                                onibus.setPercurso(trajeto);
+                                ruaEscolhida.adicionarVeiculo(onibus);
+                                System.out.println("-> [" + onibus.getIdUnico() + "] Injetado com Trajeto " + trajetoId
+                                        + " na rua: " + ruaEscolhida.getNome());
+                            } else if (sorteio < 0.80) {
+                                // 15% de chance: Pedestre atravessando fora do sinal (Prioridade Alta)
+                                // CORRIGIDO: Usa o seu construtor correto e adiciona na lista de pedestres da
+                                // rua
+                                Pedestre pedestre = new Pedestre(idSequence++, "TRAVESSIA");
+                                ruaEscolhida.adicionarPedestre(pedestre);
+                                System.out.println("-> [PE" + pedestre.getId() + "] Iniciou travessia na rua: "
                                         + ruaEscolhida.getNome());
                             } else {
-                                Policia policia = new Policia(idSequence++, "FRENTE", Prioridade.EMERGENCIA);
-                                policia.setPercurso(trajeto);
-                                ruaEscolhida.adicionarVeiculo(policia);
-                                System.out.println("-> [" + policia.getIdUnico() + "] Iniciou perseguição/emergência na rua: "
-                                        + ruaEscolhida.getNome());
+                                // 20% de chance distribuídos entre veículos de Emergência (Prioridade
+                                // Emergência)
+                                double tipoEmergencia = random.nextDouble();
+                                if (tipoEmergencia < 0.33) {
+                                    Ambulancia ambulancia = new Ambulancia(idSequence++, "FRENTE",
+                                            Prioridade.EMERGENCIA);
+                                    if (random.nextDouble() < 0.30) {
+                                        ambulancia.ligarSirene();
+                                    }
+                                    ambulancia.setPercurso(trajeto);
+                                    ruaEscolhida.adicionarVeiculo(ambulancia);
+                                    if (ambulancia.isSireneLigada()) {
+                                        System.out.println("-> [EMERGÊNCIA] " + ambulancia.getIdUnico() + " na rua "
+                                                + ruaEscolhida.getNome());
+                                    } else {
+                                        System.out.println("-> [NORMAL] " + ambulancia.getIdUnico() + " na rua "
+                                                + ruaEscolhida.getNome());
+                                    }
+                                } else if (tipoEmergencia < 0.66) {
+                                    Bombeiro bombeiro = new Bombeiro(idSequence++, "FRENTE", Prioridade.EMERGENCIA);
+                                    if (random.nextDouble() < 0.30) {
+                                        bombeiro.ligarSirene();
+                                    }
+                                    bombeiro.setPercurso(trajeto);
+                                    ruaEscolhida.adicionarVeiculo(bombeiro);
+                                    if (bombeiro.isSireneLigada()) {
+                                         System.out.println("-> [EMERGÊNCIA] " + bombeiro.getIdUnico() + " na rua " 
+                                                + ruaEscolhida.getNome());
+                                    } else {
+                                         System.out.println("-> [NORMAL] " + bombeiro.getIdUnico() + " na rua "
+                                                 + ruaEscolhida.getNome() );
+                                    }
+                                } else {
+                                    Policia policia = new Policia(idSequence++, "FRENTE", Prioridade.EMERGENCIA);
+                                    if (random.nextDouble() < 0.30) {
+                                        policia.ligarSirene();
+                                    }
+                                    policia.setPercurso(trajeto);
+                                    ruaEscolhida.adicionarVeiculo(policia);
+                                    if (policia.isSireneLigada()) {
+                                       if (policia.isSireneLigada()) {
+                                         System.out.println("-> [EMERGÊNCIA] " + policia.getIdUnico() + " na rua "
+                                                 + ruaEscolhida.getNome());
+                                } else {
+                                         System.out.println( "-> [NORMAL] " + policia.getIdUnico() + " na rua "
+                                                 + ruaEscolhida.getNome());
+                                }
+                                    } else {
+                                        System.out.println("-> [NORMAL] " + policia.getIdUnico() + " na rua "
+                                                + ruaEscolhida.getNome());
+                                    }
+                                }
                             }
                         }
-                    }
 
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
                 }
             }
         }, "Thread-Geradora");
 
-        geradorTráfego.start();
+        geradorTrafego.start();
 
         // 4. Thread para exibição periódica de logs dos Sensores no terminal
         try {
@@ -115,6 +154,7 @@ public class Main {
                 for (Rua r : cidade.getRuas()) {
                     r.getSensor().mostrarLeitura();
                 }
+                System.out.println("Veículos que concluíram trajeto: " + gerenciador.getVeiculosFinalizados());
                 System.out.println("=====================================\n");
             }
         } catch (InterruptedException e) {
@@ -122,16 +162,13 @@ public class Main {
         }
     }
 
-    // === MÉTODO ADICIONAL PARA POVOAR A CIDADE INICIALMENTE (MÍNIMO 3 DE CADA TIPO) ===
+    // === MÉTODO ADICIONAL PARA POVOAR A CIDADE INICIALMENTE (MÍNIMO 3 DE CADA
+    // TIPO) ===
     private static void povoarCidadeInicialmente(Cidade cidade) {
         Random random = new Random();
         System.out.println("Povoando cidade com carga inicial mínima de 3 veículos de cada classe...");
 
         for (int i = 1; i <= 3; i++) {
-            // Escolhe ruas de destino aleatórias
-            Rua ruaH = cidade.getRuas().get(random.nextInt(4));
-            Rua ruaV = cidade.getRuas().get(4 + random.nextInt(4));
-
             // Injeta Carro
             Carro c = new Carro(i, "FRENTE", Prioridade.BAIXA);
             c.setPercurso(Percurso.obterTrajetoPreDefinido(random.nextInt(10), cidade));
@@ -153,16 +190,31 @@ public class Main {
 
             // Injeta Ambulância
             Ambulancia am = new Ambulancia(i, "FRENTE", Prioridade.EMERGENCIA);
+
+            if (i == 1) {
+                am.ligarSirene();
+            }
+
             am.setPercurso(Percurso.obterTrajetoPreDefinido(random.nextInt(10), cidade));
             cidade.getRuas().get(random.nextInt(8)).adicionarVeiculo(am);
 
             // Injeta Bombeiro
             Bombeiro b = new Bombeiro(i, "FRENTE", Prioridade.EMERGENCIA);
+
+            if (i == 1) {
+                b.ligarSirene();
+            }
+
             b.setPercurso(Percurso.obterTrajetoPreDefinido(random.nextInt(10), cidade));
             cidade.getRuas().get(random.nextInt(8)).adicionarVeiculo(b);
 
             // Injeta Polícia
             Policia po = new Policia(i, "FRENTE", Prioridade.EMERGENCIA);
+
+            if (i == 1) {
+                po.ligarSirene();
+            }
+
             po.setPercurso(Percurso.obterTrajetoPreDefinido(random.nextInt(10), cidade));
             cidade.getRuas().get(random.nextInt(8)).adicionarVeiculo(po);
         }

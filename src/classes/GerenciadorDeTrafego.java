@@ -4,9 +4,11 @@ public class GerenciadorDeTrafego implements Runnable {
 
     private final Cidade cidade;
     private boolean rodando = true;
-    
-    // Acelera o tempo da simulação para que os 100km/120km sejam percorridos de forma visível
-    private final double fatorEscalaTempo = 180.0; 
+    private int veiculosFinalizados = 0;
+
+    // Acelera o tempo da simulação para que os 100km/120km sejam percorridos de
+    // forma visível
+    private final double fatorEscalaTempo = 180.0;
 
     public GerenciadorDeTrafego(Cidade cidade) {
         this.cidade = cityGridFix(cidade);
@@ -32,13 +34,13 @@ public class GerenciadorDeTrafego implements Runnable {
                 for (Cruzamento cruzamento : cidade.getCruzamentos()) {
                     gerenciarCruzamento(cruzamento);
                 }
-                
+
                 // 2. Mover fisicamente os veículos ao longo das vias (Km)
                 moverFisicamenteVeiculos();
 
                 // 3. Liberar (escoar) os pedestres e veículos que concluíram a travessia
                 escoarElementos();
-                
+
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -57,7 +59,8 @@ public class GerenciadorDeTrafego implements Runnable {
         Sensor sensH = ruaH.getSensor();
         Sensor sensV = ruaV.getSensor();
 
-        // Atualizar temporizadores dos sensores para rastrear envelhecimento (Timer / Aging)
+        // Atualizar temporizadores dos sensores para rastrear envelhecimento (Timer /
+        // Aging)
         sensH.atualizarTimerSinal(semH.getStatus() == 0);
         sensV.atualizarTimerSinal(semV.getStatus() == 0);
 
@@ -102,16 +105,28 @@ public class GerenciadorDeTrafego implements Runnable {
 
         // REGRA DE EMERGÊNCIA: Passam mesmo no vermelho
         if (emergH_Ativa && !emergV_Ativa) {
+            System.out.println(
+            "[CRUZAMENTO " + c.getNumero() +
+            "] PRIORIDADE DE EMERGÊNCIA -> "
+            + ruaH.getNome()
+            + " tem veículo(s) de emergência com sirene ligada! Abrindo sinal para H.");
             abrirSemaforo(semH, semV);
             pararFluxoCarrosNormais(ruaV);
             // Retoma o fluxo da via aberta se ela não estiver bloqueada por pedestres
-            if (!temPedestreH) retomarFluxoCarros(ruaH);
+            if (!temPedestreH)
+                retomarFluxoCarros(ruaH);
             return;
         } else if (emergV_Ativa && !emergH_Ativa) {
+            System.out.println(
+            "[CRUZAMENTO " + c.getNumero() +
+            "] PRIORIDADE DE EMERGÊNCIA -> "
+            + ruaV.getNome()
+            + " tem veículo(s) de emergência com sirene ligada! Abrindo sinal para V.");
             abrirSemaforo(semV, semH);
             pararFluxoCarrosNormais(ruaH);
             // Retoma o fluxo da via aberta se ela não estiver bloqueada por pedestres
-            if (!temPedestreV) retomarFluxoCarros(ruaV);
+            if (!temPedestreV)
+                retomarFluxoCarros(ruaV);
             return;
         }
 
@@ -123,13 +138,31 @@ public class GerenciadorDeTrafego implements Runnable {
         double scoreV = ruaV.getQuantidadeVeiculos() + (tempoFechadoV * 0.7);
 
         if (scoreH > scoreV) {
+            System.out.println(
+            "[CRUZAMENTO " + c.getNumero()
+            + "] Fluxo escolhido: "
+            + ruaH.getNome()
+            + " (Score="
+            + scoreH
+            + ")"
+            );
             abrirSemaforo(semH, semV);
             pararFluxoCarrosNormais(ruaV);
-            if (!temPedestreH) retomarFluxoCarros(ruaH);
+            if (!temPedestreH)
+                retomarFluxoCarros(ruaH);
         } else if (scoreV > scoreH) {
+           System.out.println(
+            "[CRUZAMENTO " + c.getNumero()
+            + "] Fluxo escolhido: "
+            + ruaV.getNome()
+            + " (Score="
+            + scoreV
+            + ")"
+            );
             abrirSemaforo(semV, semH);
             pararFluxoCarrosNormais(ruaH);
-            if (!temPedestreV) retomarFluxoCarros(ruaV);
+            if (!temPedestreV)
+                retomarFluxoCarros(ruaV);
         }
     }
 
@@ -159,7 +192,8 @@ public class GerenciadorDeTrafego implements Runnable {
         }
     }
 
-    // === NOVO MÉTODO: Retoma instantaneamente a velocidade de cruzeiro ao abrir o sinal ===
+    // === NOVO MÉTODO: Retoma instantaneamente a velocidade de cruzeiro ao abrir o
+    // sinal ===
     private void retomarFluxoCarros(Rua rua) {
         synchronized (rua.getVeiculos()) {
             for (Veiculo v : rua.getVeiculos()) {
@@ -171,13 +205,14 @@ public class GerenciadorDeTrafego implements Runnable {
     // Move os veículos pelas ruas em Km
     private void moverFisicamenteVeiculos() {
         for (Rua rua : cidade.getRuas()) {
-            double comprimentoRua = rua.getOrientacao().equalsIgnoreCase("HORIZONTAL") ? 120.0 : 100.0;
+            double comprimentoRua = rua.getComprimento();
             synchronized (rua.getVeiculos()) {
                 for (Veiculo v : rua.getVeiculos()) {
                     if (v.getVelocidadeA() > 0) {
                         // Avança a quilometragem física com base na velocidade constante
                         double deltaKm = (v.getVelocidadeA() / 3600.0) * fatorEscalaTempo;
-                        v.setKmPercorridoNaRuaAtual(Math.min(v.getKmPercorridoNaRuaAtual() + deltaKm, comprimentoRua));
+                        v.setmetrosPercorridoNaRuaAtual(
+                                Math.min(v.getmetrosPercorridoNaRuaAtual() + deltaKm, comprimentoRua));
                     }
                 }
             }
@@ -189,12 +224,14 @@ public class GerenciadorDeTrafego implements Runnable {
             Rua ruaH = c.getRuaHorizontal();
             Rua ruaV = c.getRuaVertical();
 
-            // 1. Escoar Pedestres na Horizontal (Sincronizado de forma segura no objeto da ruaH)
+            // 1. Escoar Pedestres na Horizontal (Sincronizado de forma segura no objeto da
+            // ruaH)
             synchronized (ruaH) {
                 if (!ruaH.getPedestres().isEmpty()) {
                     Pedestre p = ruaH.getPedestres().get(0);
                     if (p.getVelocidade() > 0) {
-                        System.out.println("[Pedestre " + p.getId() + "] Atravessou a rua " + ruaH.getNome() + " com velocidade " + p.getVelocidade() + " km/h");
+                        System.out.println("[Pedestre " + p.getId() + "] Atravessou a rua " + ruaH.getNome()
+                                + " com velocidade " + p.getVelocidade() + " km/h");
                         ruaH.removerPedestre(p);
                         // Retoma o tráfego de carros da horizontal que estava parado para o pedestre
                         retomarFluxoCarros(ruaH);
@@ -202,14 +239,15 @@ public class GerenciadorDeTrafego implements Runnable {
                 }
             }
 
-            // 2. Escoar Veículos na Horizontal (Se o sinal estiver aberto e veículo percorreu a rua física)
+            // 2. Escoar Veículos na Horizontal (Se o sinal estiver aberto e veículo
+            // percorreu a rua física)
             synchronized (ruaH.getVeiculos()) {
                 if (c.getSemaforoHorizontal().getStatus() == 1 && ruaH.getQuantidadeVeiculos() > 0) {
                     Veiculo v = ruaH.getVeiculos().get(0);
-                    double comprimentoRua = 120.0;
-                    if (v.getKmPercorridoNaRuaAtual() >= comprimentoRua) {
+                    double comprimentoRua = ruaH.getComprimento();
+                    if (v.getmetrosPercorridoNaRuaAtual() >= comprimentoRua) {
                         v.setVelocidadeA(); // Salta instantaneamente para a velocidade constante
-                        v.setKmPercorridoNaRuaAtual(0.0); // Reseta para a próxima rua
+                        v.setmetrosPercorridoNaRuaAtual(0.0); // Reseta para a próxima rua
                         ruaH.removerVeiculo(v);
 
                         avancarOuExcluirVeiculo(v, c, ruaH);
@@ -217,12 +255,14 @@ public class GerenciadorDeTrafego implements Runnable {
                 }
             }
 
-            // 3. Escoar Pedestres na Vertical (Sincronizado de forma segura no objeto da ruaV)
+            // 3. Escoar Pedestres na Vertical (Sincronizado de forma segura no objeto da
+            // ruaV)
             synchronized (ruaV) {
                 if (!ruaV.getPedestres().isEmpty()) {
                     Pedestre p = ruaV.getPedestres().get(0);
                     if (p.getVelocidade() > 0) {
-                        System.out.println("[Pedestre " + p.getId() + "] Atravessou a rua " + ruaV.getNome() + " com velocidade " + p.getVelocidade() + " km/h");
+                        System.out.println("[Pedestre " + p.getId() + "] Atravessou a rua " + ruaV.getNome()
+                                + " com velocidade " + p.getVelocidade() + " km/h");
                         ruaV.removerPedestre(p);
                         // Retoma o tráfego de carros da vertical que estava parado para o pedestre
                         retomarFluxoCarros(ruaV);
@@ -230,14 +270,15 @@ public class GerenciadorDeTrafego implements Runnable {
                 }
             }
 
-            // 4. Escoar Veículos na Vertical (Se o sinal estiver aberto e veículo percorreu a rua física)
+            // 4. Escoar Veículos na Vertical (Se o sinal estiver aberto e veículo percorreu
+            // a rua física)
             synchronized (ruaV.getVeiculos()) {
                 if (c.getSemaforoVertical().getStatus() == 1 && ruaV.getQuantidadeVeiculos() > 0) {
                     Veiculo v = ruaV.getVeiculos().get(0);
-                    double comprimentoRua = 100.0;
-                    if (v.getKmPercorridoNaRuaAtual() >= comprimentoRua) {
+                    double comprimentoRua = ruaV.getComprimento();
+                    if (v.getmetrosPercorridoNaRuaAtual() >= comprimentoRua) {
                         v.setVelocidadeA(); // Salta instantaneamente para a velocidade constante
-                        v.setKmPercorridoNaRuaAtual(0.0); // Reseta para a próxima rua
+                        v.setmetrosPercorridoNaRuaAtual(0.0); // Reseta para a próxima rua
                         ruaV.removerVeiculo(v);
 
                         avancarOuExcluirVeiculo(v, c, ruaV);
@@ -254,22 +295,47 @@ public class GerenciadorDeTrafego implements Runnable {
             if (!p.completou()) {
                 Cruzamento proxCruzamento = p.getCruzamentoAtual();
                 // Encontra a rua conectada no próximo cruzamento
-                Rua proximaRua = proxCruzamento.getRuaHorizontal();
-                if (proximaRua.getNome().equals(ruaOrigem.getNome())) {
-                    proximaRua = proxCruzamento.getRuaVertical();
+                Rua horizontal = proxCruzamento.getRuaHorizontal();
+                Rua vertical = proxCruzamento.getRuaVertical();
+
+                Rua proximaRua;
+
+                if (!horizontal.getNome().equals(ruaOrigem.getNome())) {
+                     proximaRua = horizontal;
+                } else {
+                 proximaRua = vertical;
                 }
+                String sentido = proximaRua.getSentido();
+
+                System.out.println(
+                  "[" + v.getIdUnico() + "] entrou na rua "
+                  + proximaRua.getNome()
+                  + " seguindo sentido "
+                  + sentido
+                );
 
                 synchronized (proximaRua.getVeiculos()) {
                     proximaRua.adicionarVeiculo(v);
                 }
-                System.out.println("[" + v.getIdUnico() + "] passou pelo Cruzamento #" + c.getNumero() + " e avançou para a rua " + proximaRua.getNome());
+                System.out.println("[" + v.getIdUnico() + "] passou pelo Cruzamento #" + c.getNumero()
+                        + " e avançou para a rua " + proximaRua.getNome());
             } else {
                 // Chegou ao fim: retorna ao cruzamento inicial para ser excluído
-                Cruzamento inicial = p.getCruzamentos().get(0);
-                System.out.println("[" + v.getIdUnico() + "] completou seu trajeto pré-definido de 10 cruzamentos, retornou ao ponto inicial (Cruzamento #" + inicial.getNumero() + ") e foi EXCLUÍDO da cidade.");
+                p.resetar();
+                Cruzamento inicial = p.getCruzamentoAtual();
+                String inicialNumero = inicial != null ? String.valueOf(inicial.getNumero()) : "N/A";
+                veiculosFinalizados++;
+                System.out.println("[" + v.getIdUnico()
+                        + "] completou seu trajeto pré-definido de 10 cruzamentos, retornou ao ponto inicial (Cruzamento #"
+                        + inicialNumero + ") e foi EXCLUÍDO da cidade.");
             }
         } else {
             System.out.println("[" + v.getIdUnico() + "] completou seu trajeto padrão e saiu da cidade.");
         }
     }
+
+    public int getVeiculosFinalizados() {
+    return veiculosFinalizados;
+    }
+
 }

@@ -8,7 +8,7 @@ public class Moto  extends Veiculo {
     ) 
     {
         super(id, direcao, prioridade);
-        setVelocidadeC(20);
+        setVelocidadeC(50);
         setVelocidadeA();
     }
 }
