@@ -22,7 +22,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DashboardMetrics extends Application {
@@ -30,14 +32,25 @@ public class DashboardMetrics extends Application {
     private Cidade cidade;
     private GerenciadorDeTrafego gerenciador;
     private Thread threadGerenciador;
+    private Thread threadGerador;
 
     // Componentes de UI
-    private Map<Integer, Label> labelsCruzamento = new HashMap<>();
+    private Map<Integer, Label> labelsCruzamentos = new HashMap<>();
     private Map<String, Label> labelsRua = new HashMap<>();
     private Map<String, Label> labelsSemaforoStatus = new HashMap<>();
+    private Map<String, Circle> semaforoCircles = new HashMap<>();
+    private Map<String, ProgressBar> progressBarsRua = new HashMap<>();
+    private Map<String, Tile> tilesMetricas = new HashMap<>();
+    private VBox colunaStarvation;
+    private VBox colunaFluxoNormal;
+    private VBox colunaAlertas;
+    private Label labelResumoRelatorio;
     private Label labelTotalVeiculos;
     private Label labelCruzamentosAtivos;
+    private Label labelSemaforosStatus;
     private BarChart<String, Number> chartVeiculos;
+
+    private static final long LIMITE_STARVATION_SEGUNDOS = 8;
 
     // Animação
     private AnimationTimer timer;
@@ -50,6 +63,7 @@ public class DashboardMetrics extends Application {
 
         if (cidade == null) {
             cidade = new Cidade();
+            TrafficSimulationBootstrap.povoarCidadeInicialmente(cidade);
             AppState.get().setCidade(cidade);
         }
 
@@ -59,6 +73,7 @@ public class DashboardMetrics extends Application {
             threadGerenciador = new Thread(gerenciador);
             threadGerenciador.setDaemon(true);
             threadGerenciador.start();
+            threadGerador = TrafficSimulationBootstrap.iniciarGeradorDeTrafego(cidade);
         }
 
         // Cria a interface
@@ -103,8 +118,15 @@ public class DashboardMetrics extends Application {
 
         labelTotalVeiculos = criarMetricaLabel("📊 Total de Veículos: 0", Color.web("#3498db"));
         labelCruzamentosAtivos = criarMetricaLabel("🔄 Cruzamentos: " + cidade.getCruzamentos().size(), Color.web("#2ecc71"));
+        labelSemaforosStatus = criarMetricaLabel("🟢 Abertos: 0 | 🔴 Fechados: 0", Color.web("#2ecc71"));
 
-        metricsBar.getChildren().addAll(labelTotalVeiculos, labelCruzamentosAtivos);
+        metricsBar.getChildren().addAll(
+                labelTotalVeiculos,
+                new Separator(javafx.geometry.Orientation.VERTICAL),
+                labelCruzamentosAtivos,
+                new Separator(javafx.geometry.Orientation.VERTICAL),
+                labelSemaforosStatus
+        );
 
         cabecalho.getChildren().addAll(titulo, metricsBar);
         return cabecalho;
@@ -120,7 +142,7 @@ public class DashboardMetrics extends Application {
     private TabPane criarAbas() {
         TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        tabPane.setPrefHeight(700);
+        tabPane.setPrefHeight(780);
 
         // Aba 1: Dashboard Principal
         Tab abaDashboard = new Tab("Dashboard", criarDashboardPrincipal());
@@ -134,18 +156,17 @@ public class DashboardMetrics extends Application {
         Tab abaRuas = new Tab("Ruas", criarPainelRuas());
         abaRuas.setStyle("-fx-font-size: 12px;");
 
-        // Aba 4: Gráficos
-        Tab abaGraficos = new Tab("Gráficos", criarPainelGraficos());
-        abaGraficos.setStyle("-fx-font-size: 12px;");
+        Tab abaInfoSistema = new Tab("Informações", criarPainelInfoGeral());
+        abaInfoSistema.setStyle("-fx-font-size: 12px;");
 
-        tabPane.getTabs().addAll(abaDashboard, abaCruzamentos, abaRuas, abaGraficos);
+        tabPane.getTabs().addAll(abaDashboard, abaInfoSistema, abaCruzamentos, abaRuas);
 
         return tabPane;
     }
 
     private VBox criarDashboardPrincipal() {
         VBox dashboard = new VBox(15);
-        dashboard.setPadding(new Insets(20));
+        dashboard.setPadding(new Insets(12));
         dashboard.setStyle("-fx-background-color: #ecf0f1;");
 
         // Painel de tiles (métricas visuais)
@@ -159,16 +180,20 @@ public class DashboardMetrics extends Application {
                         criarTileMetrica("EFICIÊNCIA SISTEMA", "0%", "#1abc9c"),
                 });
 
+        tilesMetricas.put("total", (Tile) gridPane.getChildren().get(0));
+        tilesMetricas.put("abertos", (Tile) gridPane.getChildren().get(1));
+        tilesMetricas.put("fechados", (Tile) gridPane.getChildren().get(2));
+        tilesMetricas.put("transito", (Tile) gridPane.getChildren().get(3));
+        tilesMetricas.put("espera", (Tile) gridPane.getChildren().get(4));
+        tilesMetricas.put("eficiencia", (Tile) gridPane.getChildren().get(5));
+
         gridPane.setPrefHeight(250);
         gridPane.setStyle("-fx-hgap: 15; -fx-vgap: 15;");
-
-        // Painel de informações gerais
-        VBox infoGeral = criarPainelInfoGeral();
 
         ScrollPane scrollPane = new ScrollPane(gridPane);
         scrollPane.setFitToWidth(true);
 
-        dashboard.getChildren().addAll(scrollPane, new Separator(), infoGeral);
+        dashboard.getChildren().addAll(criarRelatorioOperacional());
 
         return dashboard;
     }
@@ -183,6 +208,66 @@ public class DashboardMetrics extends Application {
                 .borderColor(Color.web(cor).brighter())
                 .borderWidth(2)
                 .build();
+    }
+
+    private VBox criarRelatorioOperacional() {
+        VBox painel = new VBox(12);
+        painel.setPadding(new Insets(15));
+        painel.setPrefHeight(690);
+        painel.setStyle("-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-width: 1;");
+
+        Label titulo = new Label("Relatorio do Trafego em Tempo Real");
+        titulo.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+
+        labelResumoRelatorio = new Label("Aguardando leitura da simulacao...");
+        labelResumoRelatorio.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #34495e;");
+        labelResumoRelatorio.setWrapText(true);
+
+        HBox colunas = new HBox(15);
+        colunas.setAlignment(Pos.TOP_LEFT);
+        colunas.setPrefHeight(590);
+        colunas.setMaxHeight(590);
+
+        colunaStarvation = criarColunaRelatorio("Veiculos e pedestres em starvation");
+        colunaFluxoNormal = criarColunaRelatorio("Veiculos e pedestres em fluxo normal");
+        colunaAlertas = criarColunaRelatorio("Possiveis problemas");
+
+        colunas.getChildren().addAll(
+                criarScrollColuna(colunaStarvation),
+                criarScrollColuna(colunaFluxoNormal),
+                criarScrollColuna(colunaAlertas)
+        );
+        painel.getChildren().addAll(titulo, labelResumoRelatorio, colunas);
+
+        return painel;
+    }
+
+    private ScrollPane criarScrollColuna(VBox coluna) {
+        ScrollPane scroll = new ScrollPane(coluna);
+        scroll.setFitToWidth(true);
+        scroll.setPrefViewportWidth(430);
+        scroll.setPrefViewportHeight(570);
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
+        return scroll;
+    }
+
+    private VBox criarColunaRelatorio(String titulo) {
+        VBox coluna = new VBox(8);
+        coluna.setPrefWidth(430);
+        coluna.setMaxWidth(430);
+        coluna.setPrefHeight(570);
+        coluna.setMaxHeight(570);
+        coluna.setMinHeight(260);
+        coluna.setPadding(new Insets(12));
+        coluna.setStyle("-fx-background-color: #f8f9fa; -fx-border-color: #dfe6e9; -fx-border-width: 1;");
+
+        Label labelTitulo = new Label(titulo);
+        labelTitulo.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        coluna.getChildren().add(labelTitulo);
+
+        return coluna;
     }
 
     private VBox criarPainelInfoGeral() {
@@ -242,7 +327,7 @@ public class DashboardMetrics extends Application {
             VBox cruzBox = criarCardCruzamento(c);
             gridCruzamentos.add(cruzBox, coluna, linha);
 
-            labelsCruzamento.put(c.getNumero(), new Label());
+            labelsCruzamentos.put(c.getNumero(), new Label());
 
             coluna++;
             if (coluna >= 4) {
@@ -297,6 +382,7 @@ public class DashboardMetrics extends Application {
         circuloH.setFill(Color.RED);
 
         labelsSemaforoStatus.put("semH_" + c.getNumero(), labelSemH);
+        semaforoCircles.put("semH_" + c.getNumero(), circuloH);
         semH.getChildren().addAll(labelSemH, circuloH);
 
         // Semáforo Vertical
@@ -311,6 +397,7 @@ public class DashboardMetrics extends Application {
         circuloV.setFill(Color.RED);
 
         labelsSemaforoStatus.put("semV_" + c.getNumero(), labelSemV);
+        semaforoCircles.put("semV_" + c.getNumero(), circuloV);
         semV.getChildren().addAll(labelSemV, circuloV);
 
         box.getChildren().addAll(semH, semV);
@@ -368,6 +455,7 @@ public class DashboardMetrics extends Application {
         progressBar.setPrefWidth(280);
 
         labelsRua.put("COUNT_" + rua.getNome(), veiculos);
+        progressBarsRua.put(rua.getNome(), progressBar);
 
         card.getChildren().addAll(nome, orientacao, sentido, new Separator(), veiculos, progressBar);
 
@@ -430,6 +518,7 @@ public class DashboardMetrics extends Application {
         }
 
         labelTotalVeiculos.setText("📊 Total de Veículos: " + totalVeiculos);
+        atualizarRelatorioOperacional(totalVeiculos);
 
         // Atualiza informações de ruas
         for (Rua rua : cidade.getRuas()) {
@@ -440,6 +529,22 @@ public class DashboardMetrics extends Application {
         }
 
         // Atualiza gráfico
+        atualizarTile("total", String.valueOf(totalVeiculos));
+        atualizarTile("transito", String.valueOf(totalVeiculos));
+
+        for (Rua rua : cidade.getRuas()) {
+            int quantidade = rua.getQuantidadeVeiculos();
+            Label infoRua = labelsRua.get(rua.getNome());
+            if (infoRua != null) {
+                infoRua.setText("Veiculos: " + quantidade + " | Sentido: " + rua.getSentido());
+            }
+
+            ProgressBar progressBar = progressBarsRua.get(rua.getNome());
+            if (progressBar != null) {
+                progressBar.setProgress(Math.min(quantidade / 20.0, 1.0));
+            }
+        }
+
         if (chartVeiculos != null && !chartVeiculos.getData().isEmpty()) {
             XYChart.Series<String, Number> series = (XYChart.Series<String, Number>) chartVeiculos.getData().get(0);
             for (Rua rua : cidade.getRuas()) {
@@ -458,15 +563,261 @@ public class DashboardMetrics extends Application {
             else fechados++;
             if (c.getSemaforoVertical().getStatus() == 1) abertos++;
             else fechados++;
+
+            atualizarSemaforoVisual("semH_" + c.getNumero(), c.getSemaforoHorizontal().getStatus());
+            atualizarSemaforoVisual("semV_" + c.getNumero(), c.getSemaforoVertical().getStatus());
+            atualizarTile("abertos", String.valueOf(abertos));
+            atualizarTile("fechados", String.valueOf(fechados));
+            atualizarTile("espera", calcularTempoMedioEspera() + "s");
+            atualizarTile("eficiencia", calcularEficiencia(abertos, fechados) + "%");
         }
 
-        labelCruzamentosAtivos.setText("🟢 Semáforos Abertos: " + abertos + " | 🔴 Fechados: " + fechados);
+        labelCruzamentosAtivos.setText("🔄 Cruzamentos: " + cidade.getCruzamentos().size());
+        labelSemaforosStatus.setText("🟢 Abertos: " + abertos + " | 🔴 Fechados: " + fechados);
+    }
+
+    private void atualizarRelatorioOperacional(int totalVeiculos) {
+        if (colunaStarvation == null || colunaFluxoNormal == null || colunaAlertas == null) {
+            return;
+        }
+
+        limparColunaRelatorio(colunaStarvation);
+        limparColunaRelatorio(colunaFluxoNormal);
+        limparColunaRelatorio(colunaAlertas);
+
+        List<Label> itensStarvation = new ArrayList<>();
+        List<Label> itensNormais = new ArrayList<>();
+        List<Label> itensAlertas = new ArrayList<>();
+        int totalPedestres = 0;
+        int totalEmergencias = 0;
+
+        for (Rua rua : cidade.getRuas()) {
+            long espera = rua.getSensor().getTempoSinalFechadoSegundos();
+            int quantidadeRua = rua.getQuantidadeVeiculos();
+
+            if (quantidadeRua >= 12) {
+                itensAlertas.add(criarItemRelatorio(
+                        "Congestionamento provavel | Rua " + rua.getNome()
+                                + " com " + quantidadeRua + " veiculos",
+                        false,
+                        true
+                ));
+            }
+
+            if (espera >= 15) {
+                itensAlertas.add(criarItemRelatorio(
+                        "Espera prolongada | Rua " + rua.getNome()
+                                + " com sinal fechado ha " + espera + "s",
+                        false,
+                        true
+                ));
+            }
+
+            synchronized (rua.getVeiculos()) {
+                for (Veiculo veiculo : rua.getVeiculos()) {
+                    boolean emergencia = veiculo.getPrioridade() == Prioridade.EMERGENCIA;
+                    boolean parado = veiculo.getVelocidadeA() == 0;
+                    boolean starvation = parado && espera >= LIMITE_STARVATION_SEGUNDOS;
+                    if (emergencia) {
+                        totalEmergencias++;
+                    }
+
+                    if (emergencia && parado) {
+                        itensAlertas.add(criarItemRelatorio(
+                                "Emergencia bloqueada | " + veiculo.getIdUnico()
+                                        + " parado na Rua " + rua.getNome(),
+                                true,
+                                true
+                        ));
+                    }
+
+                    if (veiculo.getPercurso() == null) {
+                        itensAlertas.add(criarItemRelatorio(
+                                "Veiculo sem percurso | " + veiculo.getIdUnico()
+                                        + " na Rua " + rua.getNome(),
+                                emergencia,
+                                true
+                        ));
+                    }
+
+                    String estado = parado ? "aguardando sinal" : "trafegando";
+                    if (starvation) {
+                        estado = "STARVATION ha " + espera + "s";
+                    }
+
+                    Label item = criarItemRelatorio(
+                            veiculo.getIdUnico() + " | " + veiculo.getClass().getSimpleName()
+                                    + " | Rua " + rua.getNome()
+                                    + " | " + estado
+                                    + " | " + veiculo.getVelocidadeA() + " km/h",
+                            emergencia,
+                            starvation
+                    );
+
+                    if (starvation) {
+                        itensStarvation.add(item);
+                    } else {
+                        itensNormais.add(item);
+                    }
+                }
+            }
+
+            for (Pedestre pedestre : rua.getPedestres()) {
+                totalPedestres++;
+                boolean parado = pedestre.getVelocidade() == 0;
+                boolean starvation = parado && espera >= LIMITE_STARVATION_SEGUNDOS;
+                String estado = parado ? "aguardando travessia" : "passando";
+                if (starvation) {
+                    estado = "STARVATION ha " + espera + "s";
+                }
+
+                Label item = criarItemRelatorio(
+                        "PE" + pedestre.getId()
+                                + " | Pedestre | Rua " + rua.getNome()
+                                + " | " + estado
+                                + " | " + pedestre.getVelocidade() + " km/h",
+                        false,
+                        starvation
+                );
+
+                if (starvation) {
+                    itensStarvation.add(item);
+                } else {
+                    itensNormais.add(item);
+                }
+            }
+        }
+
+        if (itensStarvation.isEmpty()) {
+            itensStarvation.add(criarItemRelatorio("Nenhum item em starvation no momento.", false, false));
+        }
+        if (itensNormais.isEmpty()) {
+            itensNormais.add(criarItemRelatorio("Nenhum veiculo ou pedestre em fluxo normal.", false, false));
+        }
+        adicionarAlertasSemaforos(itensAlertas);
+        if (itensAlertas.isEmpty()) {
+            itensAlertas.add(criarItemRelatorio("Nenhum problema provavel detectado no momento.", false, false));
+        }
+
+        colunaStarvation.getChildren().addAll(itensStarvation);
+        colunaFluxoNormal.getChildren().addAll(itensNormais);
+        colunaAlertas.getChildren().addAll(itensAlertas);
+
+        labelResumoRelatorio.setText(
+                "Veiculos: " + totalVeiculos
+                        + " | Pedestres: " + totalPedestres
+                        + " | Emergencias: " + totalEmergencias
+                        + " | Starvation: " + (itensStarvation.size() == 1 && itensStarvation.get(0).getText().startsWith("Nenhum") ? 0 : itensStarvation.size())
+                        + " | Limite: " + LIMITE_STARVATION_SEGUNDOS + "s parado com sinal fechado"
+        );
+    }
+
+    private void limparColunaRelatorio(VBox coluna) {
+        if (coluna.getChildren().size() > 1) {
+            coluna.getChildren().remove(1, coluna.getChildren().size());
+        }
+    }
+
+    private void adicionarAlertasSemaforos(List<Label> itensAlertas) {
+        for (Cruzamento cruzamento : cidade.getCruzamentos()) {
+            int statusH = cruzamento.getSemaforoHorizontal().getStatus();
+            int statusV = cruzamento.getSemaforoVertical().getStatus();
+
+            if (statusH == 1 && statusV == 1) {
+                itensAlertas.add(criarItemRelatorio(
+                        "Risco de conflito | Cruzamento #" + cruzamento.getNumero()
+                                + " com horizontal e vertical abertos",
+                        false,
+                        true
+                ));
+            }
+
+            if (statusH == 0 && statusV == 0) {
+                itensAlertas.add(criarItemRelatorio(
+                        "Bloqueio total | Cruzamento #" + cruzamento.getNumero()
+                                + " com os dois sinais fechados",
+                        false,
+                        true
+                ));
+            }
+
+            if ((statusH != 0 && statusH != 1) || (statusV != 0 && statusV != 1)) {
+                itensAlertas.add(criarItemRelatorio(
+                        "Estado invalido de semaforo | Cruzamento #" + cruzamento.getNumero(),
+                        false,
+                        true
+                ));
+            }
+        }
+    }
+
+    private Label criarItemRelatorio(String texto, boolean emergencia, boolean starvation) {
+        Label label = new Label(texto);
+        label.setWrapText(true);
+        label.setMaxWidth(350);
+        label.setPrefWidth(350);
+        label.setStyle("-fx-font-size: 12px; -fx-padding: 6; -fx-background-color: white; -fx-border-color: #ecf0f1;");
+
+        if (emergencia) {
+            label.setTextFill(Color.web("#c0392b"));
+            label.setStyle(label.getStyle() + " -fx-font-weight: bold;");
+        } else if (starvation) {
+            label.setTextFill(Color.web("#8e44ad"));
+            label.setStyle(label.getStyle() + " -fx-font-weight: bold;");
+        } else {
+            label.setTextFill(Color.web("#2c3e50"));
+        }
+
+        return label;
+    }
+
+    private void atualizarTile(String key, String value) {
+        Tile tile = tilesMetricas.get(key);
+        if (tile != null) {
+            tile.setText(value);
+        }
+    }
+
+    private void atualizarSemaforoVisual(String key, int status) {
+        boolean aberto = status == 1;
+
+        Label label = labelsSemaforoStatus.get(key);
+        if (label != null) {
+            label.setText(aberto ? "ABERTO" : "FECHADO");
+            label.setTextFill(aberto ? Color.web("#27ae60") : Color.web("#c0392b"));
+        }
+
+        Circle circle = semaforoCircles.get(key);
+        if (circle != null) {
+            circle.setFill(aberto ? Color.web("#2ecc71") : Color.web("#e74c3c"));
+        }
+    }
+
+    private long calcularTempoMedioEspera() {
+        long total = 0;
+        int sensores = 0;
+        for (Rua rua : cidade.getRuas()) {
+            total += rua.getSensor().getTempoSinalFechadoSegundos();
+            sensores++;
+        }
+        return sensores == 0 ? 0 : total / sensores;
+    }
+
+    private int calcularEficiencia(int abertos, int fechados) {
+        int totalSemaforos = abertos + fechados;
+        if (totalSemaforos == 0) {
+            return 0;
+        }
+        return (int) Math.round((abertos * 100.0) / totalSemaforos);
     }
 
     private void pararSistema() {
         gerenciador.parar();
         if (timer != null) {
             timer.stop();
+        }
+        if (threadGerador != null) {
+            threadGerador.interrupt();
         }
     }
 

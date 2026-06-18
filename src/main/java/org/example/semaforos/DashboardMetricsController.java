@@ -28,9 +28,13 @@ public class DashboardMetricsController extends Application {
 
     @FXML
     private Label labelTotalVeiculos;
-    private Label labelCruzamentosInfo;
-    private Label labelSemaforosAbertos;
-    private Label labelSemaforsFechados;
+    @FXML
+    private Label labelCruzamentosAtivos;
+    @FXML
+    private Label labelSemaforosStatus;
+    private Label labelCruzamentosInfo = new Label();
+    private Label labelSemaforosAbertos = new Label();
+    private Label labelSemaforsFechados = new Label();
 
     private TabPane tabPane;
     private Map<String, Label> mapsRuas = new HashMap<>();
@@ -350,6 +354,16 @@ public class DashboardMetricsController extends Application {
 
         labelSemaforosAbertos.setText("🟢 Abertos: " + abertos);
         labelSemaforsFechados.setText("🔴 Fechados: " + fechados);
+        atualizarCabecalhoFXML(abertos, fechados);
+    }
+
+    private void atualizarCabecalhoFXML(int abertos, int fechados) {
+        if (labelCruzamentosAtivos != null) {
+            labelCruzamentosAtivos.setText("Cruzamentos: " + cidade.getCruzamentos().size());
+        }
+        if (labelSemaforosStatus != null) {
+            labelSemaforosStatus.setText("Abertos: " + abertos + " | Fechados: " + fechados);
+        }
     }
 
     private void pararSistema() {
